@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>486745637855-e32qm3ijutmf246k8imann52ps2tpcgs.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.486745637855-e32qm3ijutmf246k8imann52ps2tpcgs</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAam2ymU_WQoRRb2BF_1sYni8UNBqB_1FA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>486745637855</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ConnorVanOoyen.GroupChat1</string>
+	<key>PROJECT_ID</key>
+	<string>groupchat1-9df84</string>
+	<key>STORAGE_BUCKET</key>
+	<string>groupchat1-9df84.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:486745637855:ios:4284a7cd15eb2c21</string>
+	<key>DATABASE_URL</key>
+	<string>https://groupchat1-9df84.firebaseio.com</string>
+</dict>
+</plist>

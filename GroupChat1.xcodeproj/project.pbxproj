@@ -1,0 +1,562 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		81DD102FEC4B53C6925537A0 /* Pods_GroupChat1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35130C13EDD8AE5735B7BEB8 /* Pods_GroupChat1.framework */; };
+		F60318431F86879500201278 /* GroupLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60318421F86879500201278 /* GroupLogController.swift */; };
+		F61702C71F7E985100126AE5 /* NewGroupControllerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702C61F7E985100126AE5 /* NewGroupControllerHandlers.swift */; };
+		F61702C91F82A5AB00126AE5 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702C81F82A5AB00126AE5 /* CustomTabBarController.swift */; };
+		F61702CB1F82AA0A00126AE5 /* SearchForGroupsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702CA1F82AA0A00126AE5 /* SearchForGroupsController.swift */; };
+		F61702CD1F82AB1200126AE5 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702CC1F82AB1200126AE5 /* Group.swift */; };
+		F61702D01F82E24500126AE5 /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702CF1F82E24500126AE5 /* GroupCell.swift */; };
+		F62838671F8FBE6800166692 /* GroupProfileMainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62838661F8FBE6800166692 /* GroupProfileMainCell.swift */; };
+		F66E59111F999F0800039F48 /* TextViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66E59101F999F0800039F48 /* TextViewExtension.swift */; };
+		F6718F3E1F90492500061257 /* ProfileSegmentedControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6718F3D1F90492500061257 /* ProfileSegmentedControlCell.swift */; };
+		F686E6E31F8488A900515AE8 /* JoinNewGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F686E6E21F8488A900515AE8 /* JoinNewGroupController.swift */; };
+		F686E6E51F8491DA00515AE8 /* JoinNewGroupControllerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F686E6E41F8491DA00515AE8 /* JoinNewGroupControllerHandlers.swift */; };
+		F6A8AD691F8C488000721B8C /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A8AD681F8C488000721B8C /* UserProfileController.swift */; };
+		F6A8AD6B1F8C543700721B8C /* UserProfileMainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A8AD6A1F8C543700721B8C /* UserProfileMainCell.swift */; };
+		F6B178901F9457C200B7BFE8 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B1788F1F9457C200B7BFE8 /* DateExtension.swift */; };
+		F6DE491E1F7C62F700E32FC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE491D1F7C62F700E32FC4 /* AppDelegate.swift */; };
+		F6DE49201F7C62F700E32FC4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE491F1F7C62F700E32FC4 /* ViewController.swift */; };
+		F6DE49231F7C62F700E32FC4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6DE49211F7C62F700E32FC4 /* Main.storyboard */; };
+		F6DE49261F7C62F700E32FC4 /* GroupChat1.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49241F7C62F700E32FC4 /* GroupChat1.xcdatamodeld */; };
+		F6DE49281F7C62F700E32FC4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F6DE49271F7C62F700E32FC4 /* Assets.xcassets */; };
+		F6DE492B1F7C62F700E32FC4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6DE49291F7C62F700E32FC4 /* LaunchScreen.storyboard */; };
+		F6DE49341F7C633300E32FC4 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49331F7C633300E32FC4 /* MessagesController.swift */; };
+		F6DE49361F7C634C00E32FC4 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49351F7C634C00E32FC4 /* LoginController.swift */; };
+		F6DE49381F7C636C00E32FC4 /* LoginControllerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49371F7C636C00E32FC4 /* LoginControllerHandlers.swift */; };
+		F6DE493B1F7C638900E32FC4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE493A1F7C638900E32FC4 /* Extensions.swift */; };
+		F6DE49411F7C646200E32FC4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F6DE49401F7C646100E32FC4 /* GoogleService-Info.plist */; };
+		F6DE49441F7C699E00E32FC4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49431F7C699E00E32FC4 /* User.swift */; };
+		F6DE49461F7C903500E32FC4 /* NewGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49451F7C903500E32FC4 /* NewGroupController.swift */; };
+		F6F6658F1F8745410027EDDA /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F6658E1F8745410027EDDA /* Message.swift */; };
+		F6F665911F87DA5F0027EDDA /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F665901F87DA5F0027EDDA /* ChatMessageCell.swift */; };
+		F6F665941F87DB000027EDDA /* InsetLabelTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F665931F87DB000027EDDA /* InsetLabelTop.swift */; };
+		F6F665961F87DB1E0027EDDA /* InsetLabelBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F665951F87DB1E0027EDDA /* InsetLabelBottom.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		35130C13EDD8AE5735B7BEB8 /* Pods_GroupChat1.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GroupChat1.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3AA846803945F963B907DBF1 /* Pods-GroupChat1.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupChat1.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GroupChat1/Pods-GroupChat1.debug.xcconfig"; sourceTree = "<group>"; };
+		87F2FE09341B075B515B79B6 /* Pods-GroupChat1.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupChat1.release.xcconfig"; path = "Pods/Target Support Files/Pods-GroupChat1/Pods-GroupChat1.release.xcconfig"; sourceTree = "<group>"; };
+		F60318421F86879500201278 /* GroupLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupLogController.swift; sourceTree = "<group>"; };
+		F61702C61F7E985100126AE5 /* NewGroupControllerHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupControllerHandlers.swift; sourceTree = "<group>"; };
+		F61702C81F82A5AB00126AE5 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
+		F61702CA1F82AA0A00126AE5 /* SearchForGroupsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchForGroupsController.swift; sourceTree = "<group>"; };
+		F61702CC1F82AB1200126AE5 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		F61702CF1F82E24500126AE5 /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
+		F62838661F8FBE6800166692 /* GroupProfileMainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileMainCell.swift; sourceTree = "<group>"; };
+		F66E59101F999F0800039F48 /* TextViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewExtension.swift; sourceTree = "<group>"; };
+		F6718F3D1F90492500061257 /* ProfileSegmentedControlCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSegmentedControlCell.swift; sourceTree = "<group>"; };
+		F686E6E21F8488A900515AE8 /* JoinNewGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinNewGroupController.swift; sourceTree = "<group>"; };
+		F686E6E41F8491DA00515AE8 /* JoinNewGroupControllerHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinNewGroupControllerHandlers.swift; sourceTree = "<group>"; };
+		F6A8AD681F8C488000721B8C /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
+		F6A8AD6A1F8C543700721B8C /* UserProfileMainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileMainCell.swift; sourceTree = "<group>"; };
+		F6B1788F1F9457C200B7BFE8 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		F6DE491A1F7C62F600E32FC4 /* GroupChat1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroupChat1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6DE491D1F7C62F700E32FC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F6DE491F1F7C62F700E32FC4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F6DE49221F7C62F700E32FC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F6DE49251F7C62F700E32FC4 /* GroupChat1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GroupChat1.xcdatamodel; sourceTree = "<group>"; };
+		F6DE49271F7C62F700E32FC4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F6DE492A1F7C62F700E32FC4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F6DE492C1F7C62F700E32FC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F6DE49331F7C633300E32FC4 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
+		F6DE49351F7C634C00E32FC4 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		F6DE49371F7C636C00E32FC4 /* LoginControllerHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginControllerHandlers.swift; sourceTree = "<group>"; };
+		F6DE493A1F7C638900E32FC4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		F6DE49401F7C646100E32FC4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F6DE49431F7C699E00E32FC4 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		F6DE49451F7C903500E32FC4 /* NewGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupController.swift; sourceTree = "<group>"; };
+		F6F6658E1F8745410027EDDA /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		F6F665901F87DA5F0027EDDA /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
+		F6F665931F87DB000027EDDA /* InsetLabelTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabelTop.swift; sourceTree = "<group>"; };
+		F6F665951F87DB1E0027EDDA /* InsetLabelBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabelBottom.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F6DE49171F7C62F600E32FC4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81DD102FEC4B53C6925537A0 /* Pods_GroupChat1.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00463919C7C708EB6C024344 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3AA846803945F963B907DBF1 /* Pods-GroupChat1.debug.xcconfig */,
+				87F2FE09341B075B515B79B6 /* Pods-GroupChat1.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		66F52333FD5563745F97A60A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				35130C13EDD8AE5735B7BEB8 /* Pods_GroupChat1.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F61702CE1F82E23700126AE5 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				F61702CF1F82E24500126AE5 /* GroupCell.swift */,
+				F6F665901F87DA5F0027EDDA /* ChatMessageCell.swift */,
+				F6A8AD6A1F8C543700721B8C /* UserProfileMainCell.swift */,
+				F62838661F8FBE6800166692 /* GroupProfileMainCell.swift */,
+				F6718F3D1F90492500061257 /* ProfileSegmentedControlCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		F6DE49111F7C62F600E32FC4 = {
+			isa = PBXGroup;
+			children = (
+				F6DE491C1F7C62F700E32FC4 /* GroupChat1 */,
+				F6DE491B1F7C62F600E32FC4 /* Products */,
+				00463919C7C708EB6C024344 /* Pods */,
+				66F52333FD5563745F97A60A /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F6DE491B1F7C62F600E32FC4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F6DE491A1F7C62F600E32FC4 /* GroupChat1.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F6DE491C1F7C62F700E32FC4 /* GroupChat1 */ = {
+			isa = PBXGroup;
+			children = (
+				F6F665921F87DAF10027EDDA /* Helpers */,
+				F6DE49421F7C698700E32FC4 /* Models */,
+				F61702CE1F82E23700126AE5 /* View */,
+				F6DE49391F7C637500E32FC4 /* Extensions */,
+				F6DE49321F7C632000E32FC4 /* Controllers */,
+				F6DE491D1F7C62F700E32FC4 /* AppDelegate.swift */,
+				F6DE491F1F7C62F700E32FC4 /* ViewController.swift */,
+				F6DE49211F7C62F700E32FC4 /* Main.storyboard */,
+				F6DE49271F7C62F700E32FC4 /* Assets.xcassets */,
+				F6DE49291F7C62F700E32FC4 /* LaunchScreen.storyboard */,
+				F6DE492C1F7C62F700E32FC4 /* Info.plist */,
+				F6DE49241F7C62F700E32FC4 /* GroupChat1.xcdatamodeld */,
+				F6DE49401F7C646100E32FC4 /* GoogleService-Info.plist */,
+			);
+			path = GroupChat1;
+			sourceTree = "<group>";
+		};
+		F6DE49321F7C632000E32FC4 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F6DE49331F7C633300E32FC4 /* MessagesController.swift */,
+				F6DE49351F7C634C00E32FC4 /* LoginController.swift */,
+				F6DE49371F7C636C00E32FC4 /* LoginControllerHandlers.swift */,
+				F6DE49451F7C903500E32FC4 /* NewGroupController.swift */,
+				F61702C61F7E985100126AE5 /* NewGroupControllerHandlers.swift */,
+				F61702C81F82A5AB00126AE5 /* CustomTabBarController.swift */,
+				F61702CA1F82AA0A00126AE5 /* SearchForGroupsController.swift */,
+				F686E6E21F8488A900515AE8 /* JoinNewGroupController.swift */,
+				F686E6E41F8491DA00515AE8 /* JoinNewGroupControllerHandlers.swift */,
+				F60318421F86879500201278 /* GroupLogController.swift */,
+				F6A8AD681F8C488000721B8C /* UserProfileController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		F6DE49391F7C637500E32FC4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F6DE493A1F7C638900E32FC4 /* Extensions.swift */,
+				F6B1788F1F9457C200B7BFE8 /* DateExtension.swift */,
+				F66E59101F999F0800039F48 /* TextViewExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F6DE49421F7C698700E32FC4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F6DE49431F7C699E00E32FC4 /* User.swift */,
+				F61702CC1F82AB1200126AE5 /* Group.swift */,
+				F6F6658E1F8745410027EDDA /* Message.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F6F665921F87DAF10027EDDA /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F6F665931F87DB000027EDDA /* InsetLabelTop.swift */,
+				F6F665951F87DB1E0027EDDA /* InsetLabelBottom.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F6DE49191F7C62F600E32FC4 /* GroupChat1 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F6DE492F1F7C62F700E32FC4 /* Build configuration list for PBXNativeTarget "GroupChat1" */;
+			buildPhases = (
+				7F27BF76D5AC74800601F032 /* [CP] Check Pods Manifest.lock */,
+				F6DE49161F7C62F600E32FC4 /* Sources */,
+				F6DE49171F7C62F600E32FC4 /* Frameworks */,
+				F6DE49181F7C62F600E32FC4 /* Resources */,
+				D9B6ED1BF3F024317FAB6415 /* [CP] Embed Pods Frameworks */,
+				8488730843CB3EB9DD527359 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GroupChat1;
+			productName = GroupChat1;
+			productReference = F6DE491A1F7C62F600E32FC4 /* GroupChat1.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F6DE49121F7C62F600E32FC4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0900;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "Connor Van Ooyen";
+				TargetAttributes = {
+					F6DE49191F7C62F600E32FC4 = {
+						CreatedOnToolsVersion = 9.0;
+					};
+				};
+			};
+			buildConfigurationList = F6DE49151F7C62F600E32FC4 /* Build configuration list for PBXProject "GroupChat1" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F6DE49111F7C62F600E32FC4;
+			productRefGroup = F6DE491B1F7C62F600E32FC4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F6DE49191F7C62F600E32FC4 /* GroupChat1 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F6DE49181F7C62F600E32FC4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F6DE492B1F7C62F700E32FC4 /* LaunchScreen.storyboard in Resources */,
+				F6DE49411F7C646200E32FC4 /* GoogleService-Info.plist in Resources */,
+				F6DE49281F7C62F700E32FC4 /* Assets.xcassets in Resources */,
+				F6DE49231F7C62F700E32FC4 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7F27BF76D5AC74800601F032 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GroupChat1-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8488730843CB3EB9DD527359 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GroupChat1/Pods-GroupChat1-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D9B6ED1BF3F024317FAB6415 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-GroupChat1/Pods-GroupChat1-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GroupChat1/Pods-GroupChat1-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F6DE49161F7C62F600E32FC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F6F665941F87DB000027EDDA /* InsetLabelTop.swift in Sources */,
+				F6DE49381F7C636C00E32FC4 /* LoginControllerHandlers.swift in Sources */,
+				F60318431F86879500201278 /* GroupLogController.swift in Sources */,
+				F6DE49201F7C62F700E32FC4 /* ViewController.swift in Sources */,
+				F6F6658F1F8745410027EDDA /* Message.swift in Sources */,
+				F6B178901F9457C200B7BFE8 /* DateExtension.swift in Sources */,
+				F6F665961F87DB1E0027EDDA /* InsetLabelBottom.swift in Sources */,
+				F6A8AD691F8C488000721B8C /* UserProfileController.swift in Sources */,
+				F686E6E31F8488A900515AE8 /* JoinNewGroupController.swift in Sources */,
+				F62838671F8FBE6800166692 /* GroupProfileMainCell.swift in Sources */,
+				F61702C71F7E985100126AE5 /* NewGroupControllerHandlers.swift in Sources */,
+				F61702CB1F82AA0A00126AE5 /* SearchForGroupsController.swift in Sources */,
+				F6718F3E1F90492500061257 /* ProfileSegmentedControlCell.swift in Sources */,
+				F61702CD1F82AB1200126AE5 /* Group.swift in Sources */,
+				F6DE491E1F7C62F700E32FC4 /* AppDelegate.swift in Sources */,
+				F66E59111F999F0800039F48 /* TextViewExtension.swift in Sources */,
+				F6DE49261F7C62F700E32FC4 /* GroupChat1.xcdatamodeld in Sources */,
+				F61702D01F82E24500126AE5 /* GroupCell.swift in Sources */,
+				F6A8AD6B1F8C543700721B8C /* UserProfileMainCell.swift in Sources */,
+				F61702C91F82A5AB00126AE5 /* CustomTabBarController.swift in Sources */,
+				F6DE49461F7C903500E32FC4 /* NewGroupController.swift in Sources */,
+				F686E6E51F8491DA00515AE8 /* JoinNewGroupControllerHandlers.swift in Sources */,
+				F6DE49441F7C699E00E32FC4 /* User.swift in Sources */,
+				F6DE49341F7C633300E32FC4 /* MessagesController.swift in Sources */,
+				F6F665911F87DA5F0027EDDA /* ChatMessageCell.swift in Sources */,
+				F6DE49361F7C634C00E32FC4 /* LoginController.swift in Sources */,
+				F6DE493B1F7C638900E32FC4 /* Extensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F6DE49211F7C62F700E32FC4 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F6DE49221F7C62F700E32FC4 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F6DE49291F7C62F700E32FC4 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F6DE492A1F7C62F700E32FC4 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F6DE492D1F7C62F700E32FC4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F6DE492E1F7C62F700E32FC4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F6DE49301F7C62F700E32FC4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3AA846803945F963B907DBF1 /* Pods-GroupChat1.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = A62BDUX2VJ;
+				INFOPLIST_FILE = GroupChat1/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ConnorVanOoyen.GroupChat1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F6DE49311F7C62F700E32FC4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 87F2FE09341B075B515B79B6 /* Pods-GroupChat1.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = A62BDUX2VJ;
+				INFOPLIST_FILE = GroupChat1/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ConnorVanOoyen.GroupChat1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F6DE49151F7C62F600E32FC4 /* Build configuration list for PBXProject "GroupChat1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6DE492D1F7C62F700E32FC4 /* Debug */,
+				F6DE492E1F7C62F700E32FC4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F6DE492F1F7C62F700E32FC4 /* Build configuration list for PBXNativeTarget "GroupChat1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6DE49301F7C62F700E32FC4 /* Debug */,
+				F6DE49311F7C62F700E32FC4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F6DE49241F7C62F700E32FC4 /* GroupChat1.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F6DE49251F7C62F700E32FC4 /* GroupChat1.xcdatamodel */,
+			);
+			currentVersion = F6DE49251F7C62F700E32FC4 /* GroupChat1.xcdatamodel */;
+			path = GroupChat1.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = F6DE49121F7C62F600E32FC4 /* Project object */;
+}
