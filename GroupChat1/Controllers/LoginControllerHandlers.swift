@@ -31,7 +31,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 print("Login Error: ", error as Any)
              }
          
-             self.messagesController?.fetchUserandSetupNavBarTitle()
+             self.HomePageController?.fetchUserandSetupNavBarTitle()
              self.dismiss(animated: true, completion: nil)
          
          })
@@ -118,7 +118,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
              user.email = values["email"] as? String
              user.name = values["username"] as? String
              user.profileImageUrl = values["profileImageURL"] as? String
-             self.messagesController?.setupNavBarWithUser(user: user)
+             self.HomePageController?.setupNavBarWithUser(user: user)
             
              self.dismiss(animated: true, completion: nil)
          })

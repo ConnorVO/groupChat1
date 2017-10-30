@@ -19,13 +19,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        let navigationBarAppearance = UINavigationBar.appearance()
+        navigationBarAppearance.barTintColor = UIColor.white
+        navigationBarAppearance.tintColor = UIColor.green.main
+        
         FIRApp.configure()
         
         // my own storyboard stuff
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-        //window?.rootViewController = UINavigationController(rootViewController: MessagesController())
+        //window?.rootViewController = UINavigationController(rootViewController: HomePageController())
         window?.rootViewController = CustomTabBarController()
         
         return true

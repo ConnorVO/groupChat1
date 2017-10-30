@@ -15,7 +15,7 @@ class GroupProfileMainCell: UICollectionViewCell {
     
     let cellView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.blue.main
+        view.backgroundColor = UIColor.green.main
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -46,7 +46,7 @@ class GroupProfileMainCell: UICollectionViewCell {
         label.text = "Sample text for now"
         label.font = UIFont.systemFont(ofSize: 24)
         label.backgroundColor = UIColor.clear
-        label.textColor = UIColor.black
+        label.textColor = UIColor.white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -56,7 +56,7 @@ class GroupProfileMainCell: UICollectionViewCell {
         tv.text = "Click to Edit Info"
         tv.font = UIFont.systemFont(ofSize: 16)
         tv.backgroundColor = UIColor.clear
-        tv.textColor = UIColor.black
+        tv.textColor = UIColor.white
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.sizeToFit()
         return tv

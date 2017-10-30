@@ -15,7 +15,7 @@ class NewGroupController: UIViewController, UITextViewDelegate {
     
     let groupImageBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.blue.button
+        view.backgroundColor = UIColor.white
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 60; //rounded button
         view.layer.masksToBounds = true;
@@ -87,7 +87,7 @@ class NewGroupController: UIViewController, UITextViewDelegate {
     
     lazy var createNewGroupButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.blue.button
+        button.backgroundColor = UIColor.green.button
         button.setTitle("Create", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: .normal)
@@ -103,7 +103,7 @@ class NewGroupController: UIViewController, UITextViewDelegate {
         
         groupDescriptionTextView.delegate = self
         
-        view.backgroundColor = UIColor.blue.main
+        view.backgroundColor = UIColor.green.main
         
         view.addSubview(groupImageBackground)
         view.addSubview(groupNameInputViewContainer)
@@ -116,9 +116,6 @@ class NewGroupController: UIViewController, UITextViewDelegate {
         setupDescriptionInputViewContainer()
         setupTagsInputViewContainer()
         setupCreateNewGroupButton()
-        
-        navigationController?.navigationBar.barTintColor = UIColor.blue.main
-        navigationController?.navigationBar.tintColor = UIColor.white
         
         NotificationCenter.default.addObserver(self, selector: #selector(NewGroupController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(NewGroupController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)

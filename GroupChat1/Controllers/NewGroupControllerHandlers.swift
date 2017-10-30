@@ -12,8 +12,8 @@ import Firebase
 extension NewGroupController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @objc func handleCancelNewGroup() {
-        let messagesController = MessagesController()
-        present(messagesController, animated: true, completion: nil)
+        let homePageController = HomePageController()
+        present(homePageController, animated: true, completion: nil)
     }
     
     @objc func handleCreateNewGroupButton() {
@@ -37,7 +37,7 @@ extension NewGroupController: UIImagePickerControllerDelegate, UINavigationContr
             let groupTagsArray = groupTagsText.components(separatedBy: ",") as [String]
             saveNewGroupInfoToDatabase(groupImage: groupImage, groupName: groupNameText, groupDescription: groupDescriptionText, groupTags: groupTagsArray)
             
-            navigationController?.pushViewController(MessagesController(collectionViewLayout: UICollectionViewFlowLayout()), animated: true)
+            navigationController?.pushViewController(HomePageController(collectionViewLayout: UICollectionViewFlowLayout()), animated: true)
             
         } else {
             print("Tags or Group Name are empty")

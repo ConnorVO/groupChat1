@@ -157,8 +157,8 @@ class ChatMessageCell: UICollectionViewCell {
         timestampLabel.centerYAnchor.constraint(equalTo: usernameBtn.centerYAnchor).isActive = true
         
         cellView.addSubview(groupLabel)
-        groupLabel.leftAnchor.constraint(equalTo: usernameBtn.rightAnchor, constant: 4).isActive = true
-        groupLabel.bottomAnchor.constraint(equalTo: usernameBtn.bottomAnchor, constant: -6).isActive = true
+        groupLabel.leftAnchor.constraint(equalTo: timestampLabel.rightAnchor, constant: 4).isActive = true
+        groupLabel.bottomAnchor.constraint(equalTo: usernameBtn.bottomAnchor, constant: -7).isActive = true
         
         cellView.addSubview(messageImageView)
         messageImageView.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8).isActive = true

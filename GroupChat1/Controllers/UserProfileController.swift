@@ -214,7 +214,7 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
             return cell
             
         } else {
-            
+
             if activeSegment == 1 {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: userProfileGroupCellId, for: indexPath) as! GroupCell
                 
@@ -222,10 +222,9 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
                     attemptReloadOfCollection()
                 } else {
                     let group = groups[indexPath.row]
+                   
                     cell.titleLabel.text = group.groupName
                     cell.descriptionLabel.text = group.groupDescription
-                    cell.joinButton.setTitle("joined", for: .normal)
-                    cell.joinButton.setTitleColor(UIColor.green, for: .normal)
                     
                     cell.onJoinButtonTapped = {
                         self.handleJoinButtonTap(cell: cell, indexPath: indexPath)
@@ -234,12 +233,15 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
                     if let groupImageUrl = group.groupImageUrl {
                         cell.groupImageView.loadImageUsingCacheWithUrlString(urlString: groupImageUrl)
                     }
+                    
+                    checkIfUserIsInGroup(cell: cell, indexPath: indexPath)
                 }
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: chatMessageCellId, for: indexPath) as! ChatMessageCell
                 cell.usernameBtn.setTitle(user.name, for: .normal)
                 cell.messageTextLabel.text = messages[indexPath.row].text
+                //cell.groupOwnerMenuBtn.isHidden = true
                 guard let timestamp = messages[indexPath.row].timestamp else {
                     return cell
                 }
@@ -261,6 +263,37 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
                 return cell
             }
         }
+    }
+    
+    var joinedGroups = [String]()
+    private func checkIfUserIsInGroup(cell: GroupCell, indexPath: IndexPath) {
+        
+        joinedGroups.removeAll()
+        
+        guard let currentUserId = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        
+        guard let groupId = groups[indexPath.row].groupId else {
+            return
+        }
+        
+        let ref = FIRDatabase.database().reference().child("users").child(currentUserId).child("groups")
+        ref.observe(.childAdded, with: { (snapshot) in
+            
+            if snapshot.key == groupId {
+                self.joinedGroups.append(groupId)
+            }
+            
+            if self.joinedGroups.contains(groupId) {
+                cell.joinButton.setTitleColor(UIColor.green.main, for: .normal)
+                cell.joinButton.setTitle("joined", for: .normal)
+            } else {
+                cell.joinButton.setTitleColor(UIColor.red, for: .normal)
+                cell.joinButton.setTitle("join", for: .normal)
+            }
+            
+        })
     }
     
     private func handleProfileImageViewBtnTapped() {
@@ -325,8 +358,8 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
                      
                         self.user.profileImageUrl = values["profileImageURL"]
                         if let profileImageView = self.user.profileImageUrl {
-                            let messagesController = MessagesController(collectionViewLayout: UICollectionViewFlowLayout())
-                            messagesController.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageView)
+                            let homePageController = HomePageController(collectionViewLayout: UICollectionViewFlowLayout())
+                            homePageController.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageView)
                         }
                         
                         self.collectionView?.reloadData()
@@ -405,7 +438,11 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets.zero
+        if section == 2 {
+            return UIEdgeInsetsMake(6, 0, 0, 0)
+        } else {
+            return UIEdgeInsets.zero
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

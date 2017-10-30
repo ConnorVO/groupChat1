@@ -56,5 +56,17 @@ extension UIColor {
         static let main = UIColor(r: 61, g: 91, b: 151)
         static let button = UIColor(r: 80, g: 101, b: 161)
     }
+    
+    struct orange {
+        static let original = UIColor(r: 255, g: 127.5, b:0)
+        static let main = UIColor(r: 248, g: 180, b: 58)
+    }
+    
+    struct green {
+        static let original = UIColor(r: 0, g: 0, b: 1)
+        static let main = UIColor(r: 34, g: 200, b: 112)
+        static let button = UIColor(r: 44, g: 224, b: 128)
+        static let darker = UIColor(r: 28, g: 178 , b: 99)
+    }
 }
 
