@@ -67,7 +67,7 @@ class JoinNewGroupController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.blue.main
+        view.backgroundColor = UIColor.green.main
         
         view.addSubview(groupImageView)
         view.addSubview(titleAndDescriptionView)
@@ -149,7 +149,7 @@ class JoinNewGroupController: UIViewController {
         ref.observe(.childAdded, with: { (snapshot) in
             
             if snapshot.key == groupId {
-                self.joinGroupButton.backgroundColor = UIColor.green
+                self.joinGroupButton.backgroundColor = UIColor.green.main
                 self.joinGroupButton.titleLabel?.text = "Joined"
             }
         })

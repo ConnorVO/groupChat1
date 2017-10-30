@@ -55,7 +55,6 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
             self.checkIfUserCameFromAMessage()
         }
         
-      //  checkIfUserCameFromAMessage()
         
         //remove white space between collection view and navigation bar
         collectionView?.contentInset = UIEdgeInsetsMake(-10, 0, 0, 0)
@@ -427,6 +426,12 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
                 
                 guard let currentUserUid = FIRAuth.auth()?.currentUser?.uid else {
                     return cell
+                }
+                
+                if uid == currentUserUid {
+                    cell.usernameBtn.setTitleColor(UIColor.green.darker, for: .normal)
+                } else {
+                    cell.usernameBtn.setTitleColor(UIColor.black, for: .normal)
                 }
                 
                 getGroupCreatorUid(completionHandler: { (response) in

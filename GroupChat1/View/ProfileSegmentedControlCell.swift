@@ -15,7 +15,7 @@ class ProfileSegmentedControlCell: UICollectionViewCell {
     
     let containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.lightGray
+        view.backgroundColor = UIColor(r: 131, g: 143, b: 147)//UIColor(r: 186, g: 200, b: 204)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -24,7 +24,7 @@ class ProfileSegmentedControlCell: UICollectionViewCell {
         let btn = UIButton(type: .system)
         btn.setTitle("Groups", for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 18)
-        btn.setTitleColor(UIColor.blue.main, for: .normal)
+        btn.setTitleColor(UIColor.green.main, for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.addTarget(self, action: #selector(handleFirstBtn), for: .touchUpInside)
         return btn
@@ -32,7 +32,7 @@ class ProfileSegmentedControlCell: UICollectionViewCell {
     
     let firstSeparatorView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.blue.main
+        view.backgroundColor = UIColor.green.main
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = false
         return view
@@ -50,7 +50,7 @@ class ProfileSegmentedControlCell: UICollectionViewCell {
     
     let secondSeparatorView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.blue.main
+        view.backgroundColor = UIColor.green.main
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = true
         return view
@@ -95,7 +95,7 @@ class ProfileSegmentedControlCell: UICollectionViewCell {
         if let onGroupLabelTapped = self.onGroupLabelTapped {
             onGroupLabelTapped()
         }
-        firstButton.setTitleColor(UIColor.blue.main, for: .normal)
+        firstButton.setTitleColor(UIColor.green.main, for: .normal)
         secondButton.setTitleColor(UIColor.white, for: .normal)
         firstSeparatorView.isHidden = false
         secondSeparatorView.isHidden = true
@@ -105,7 +105,7 @@ class ProfileSegmentedControlCell: UICollectionViewCell {
         if let onMessagesLabelTapped = self.onMessagesLabelTapped {
             onMessagesLabelTapped()
         }
-        secondButton.setTitleColor(UIColor.blue.main, for: .normal)
+        secondButton.setTitleColor(UIColor.green.main, for: .normal)
         firstButton.setTitleColor(UIColor.white, for: .normal)
         secondSeparatorView.isHidden = false
         firstSeparatorView.isHidden = true

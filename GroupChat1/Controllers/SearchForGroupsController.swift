@@ -179,6 +179,7 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
         
         return cell
     }
+    
     var joinedGroups = [String]()
     private func checkIfUserIsInGroup(cell: GroupCell, indexPath: IndexPath) {
         
@@ -200,7 +201,7 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
             }
             
             if self.joinedGroups.contains(groupId) {
-                cell.joinButton.setTitleColor(UIColor.green, for: .normal)
+                cell.joinButton.setTitleColor(UIColor.green.main, for: .normal)
                 cell.joinButton.setTitle("joined", for: .normal)
             } else {
                 cell.joinButton.setTitleColor(UIColor.red, for: .normal)

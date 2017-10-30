@@ -10,7 +10,7 @@ import UIKit
 
 class LoginController: UIViewController {
     
-    var messagesController: MessagesController?
+    var HomePageController: HomePageController?
     var keyboardHeight: CGFloat?
     
     //set-up middle input view
@@ -25,7 +25,7 @@ class LoginController: UIViewController {
     
     lazy var loginRegisterButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.blue.button
+        button.backgroundColor = UIColor.green.button
         button.setTitle("Register", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: .normal)
@@ -97,7 +97,7 @@ class LoginController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor.blue.main
+        view.backgroundColor = UIColor.green.main
         
         view.addSubview(inputsViewContainer)
         view.addSubview(loginRegisterButton)

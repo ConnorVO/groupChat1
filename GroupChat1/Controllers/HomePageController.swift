@@ -1,5 +1,5 @@
 //
-//  MessagesController.swift
+//  HomePageController.swift
 //  GroupChat1
 //
 //  Created by Connor Van Ooyen on 9/25/17.
@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class MessagesController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class HomePageController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     let cellId = "cellId"
     
@@ -30,9 +30,6 @@ class MessagesController: UICollectionViewController, UITextFieldDelegate, UICol
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        navigationController?.navigationBar.barTintColor = UIColor.white
-        navigationController?.navigationBar.tintColor = UIColor(r: 0, g: 112, b: 201)
         
         navigationItem.title = "Home"
         
@@ -132,7 +129,7 @@ class MessagesController: UICollectionViewController, UITextFieldDelegate, UICol
         }
         
         let loginController = LoginController()
-        loginController.messagesController = self //makes messagesController not nil when calling self.messagesController?.fetchUserAndSetupNavBarTitle from LoginController + Handlers
+        loginController.HomePageController = self //makes HomePageController not nil when calling self.HomePageController?.fetchUserAndSetupNavBarTitle from LoginController + Handlers
         
         present(loginController, animated: true, completion: nil)
     }
@@ -220,7 +217,7 @@ class MessagesController: UICollectionViewController, UITextFieldDelegate, UICol
         cell.titleLabel.text = group.groupName
         cell.descriptionLabel.text = group.groupDescription
         cell.joinButton.setTitle("joined", for: .normal)
-        cell.joinButton.setTitleColor(UIColor.green, for: .normal)
+        cell.joinButton.setTitleColor(UIColor.green.main, for: .normal)
         
         cell.onJoinButtonTapped = {
             self.handleJoinButtonTap(cell: cell, indexPath: indexPath)

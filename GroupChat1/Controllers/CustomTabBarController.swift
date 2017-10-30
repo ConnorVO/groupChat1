@@ -13,7 +13,7 @@ class CustomTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let homeController = MessagesController(collectionViewLayout: UICollectionViewFlowLayout())
+        let homeController = HomePageController(collectionViewLayout: UICollectionViewFlowLayout())
         let homeNavigationController = UINavigationController(rootViewController: homeController)
         homeNavigationController.title = "Home"
         homeNavigationController.tabBarItem.image = UIImage(named: "home_icon")
