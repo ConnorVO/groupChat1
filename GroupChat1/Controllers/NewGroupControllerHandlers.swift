@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import OneSignal
 
 extension NewGroupController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -51,6 +52,10 @@ extension NewGroupController: UIImagePickerControllerDelegate, UINavigationContr
         //generate unique name for each image
         let imageName = NSUUID().uuidString
         let imageRef = FIRStorage.storage().reference().child("group_profile_images").child("\(imageName).png")
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        guard let oneSignalUserID = status.subscriptionStatus.userId else {
+            return
+        }
         
         if let uploadData = UIImageJPEGRepresentation(groupImage, 0.2) {
             imageRef.put(uploadData, metadata: nil, completion: { (metadata, error) in
@@ -64,9 +69,10 @@ extension NewGroupController: UIImagePickerControllerDelegate, UINavigationContr
                 }
                 
                 let groupMembers: [String: Any] = [currentUserId: true]
+                let oneSignalUserIds: [String: Any] = [oneSignalUserID: true]
                 
                 if let groupImageUrl = metadata?.downloadURL()?.absoluteString {
-                    let values: [String: Any] = ["groupImageUrl": groupImageUrl, "groupName": groupName, "groupDescription": groupDescription, "groupMembers": groupMembers, "groupCreator": currentUserId]
+                    let values: [String: Any] = ["groupImageUrl": groupImageUrl, "groupName": groupName, "groupDescription": groupDescription, "groupMembers": groupMembers, "groupCreator": currentUserId, "groupMemberOneSignalIds": oneSignalUserIds, "memberCount": 1]
                     
                     childRef.updateChildValues(values){ (error, ref) in
                         if error != nil {

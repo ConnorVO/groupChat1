@@ -51,7 +51,7 @@ class UserProfileMainCell: UICollectionViewCell, UITextViewDelegate {
     let usernameLabel: UILabel = {
         let label = UILabel()
         label.text = "Sample text for now"
-        label.font = UIFont.systemFont(ofSize: 24)
+        label.font = UIFont.systemFont(ofSize: 22)
         label.backgroundColor = UIColor.clear
         label.textColor = UIColor.white
         label.translatesAutoresizingMaskIntoConstraints = false

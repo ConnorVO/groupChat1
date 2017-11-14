@@ -49,17 +49,18 @@ class ChatMessageCell: UICollectionViewCell {
         return btn
     }()
     
-    let messageTextLabel: InsetLabelBottom = {
-        let label = InsetLabelBottom()
-        label.text = "loading..."
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.backgroundColor = UIColor.clear
-        label.textColor = UIColor.black
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.sizeToFit()
-        return label
+    let messageTextView: UITextView = {
+        let tv = UITextView()
+        tv.text = "loading..."
+        tv.font = UIFont.systemFont(ofSize: 14)
+        tv.backgroundColor = UIColor.clear
+        tv.textColor = UIColor.black
+        tv.isEditable = false
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.sizeToFit()
+        tv.isScrollEnabled = false //needed for size to fit
+        tv.dataDetectorTypes = UIDataDetectorTypes.all;
+        return tv
     }()
     
     let timestampSeparator: UILabel = {
@@ -73,6 +74,18 @@ class ChatMessageCell: UICollectionViewCell {
         return label
     }()
     
+    let starredSeparator: UILabel = {
+        let label = UILabel()
+        label.text = "."
+        label.font = UIFont.systemFont(ofSize: 20)
+        label.backgroundColor = UIColor.clear
+        label.textColor = UIColor.black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.sizeToFit()
+        label.isHidden = true
+        return label
+    }()
+    
     let timestampLabel: UILabel = {
         let label = UILabel()
         label.text = "11:45pm"
@@ -81,6 +94,18 @@ class ChatMessageCell: UICollectionViewCell {
         label.textColor = UIColor.black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.sizeToFit()
+        return label
+    }()
+    
+    let starredLabel: UILabel = {
+        let label = UILabel()
+        label.text = "STARRED"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.backgroundColor = UIColor.clear
+        label.textColor = UIColor.purple
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.sizeToFit()
+        label.isHidden = true
         return label
     }()
     
@@ -109,8 +134,8 @@ class ChatMessageCell: UICollectionViewCell {
     
     lazy var groupOwnerMenuBtn: UIButton = {
         let btn = UIButton(type: .system)
-        btn.setTitle("+", for: .normal)
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        btn.setTitle("\u{2228}", for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         btn.setTitleColor(UIColor.black, for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.sizeToFit()
@@ -143,10 +168,10 @@ class ChatMessageCell: UICollectionViewCell {
         usernameBtn.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8).isActive = true
         usernameBtn.topAnchor.constraint(equalTo: cellView.topAnchor, constant: -8).isActive = true
         
-        cellView.addSubview(messageTextLabel)
-        messageTextLabel.leftAnchor.constraint(equalTo: usernameBtn.leftAnchor).isActive = true
-        messageTextLabel.topAnchor.constraint(equalTo: usernameBtn.bottomAnchor).isActive = true
-        messageTextLabel.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        cellView.addSubview(messageTextView)
+        messageTextView.leftAnchor.constraint(equalTo: usernameBtn.leftAnchor, constant: -4).isActive = true
+        messageTextView.topAnchor.constraint(equalTo: usernameBtn.bottomAnchor).isActive = true
+        messageTextView.widthAnchor.constraint(equalToConstant: 250).isActive = true
         
         cellView.addSubview(timestampSeparator)
         timestampSeparator.leftAnchor.constraint(equalTo: usernameBtn.rightAnchor, constant: 4).isActive = true
@@ -155,6 +180,14 @@ class ChatMessageCell: UICollectionViewCell {
         cellView.addSubview(timestampLabel)
         timestampLabel.leftAnchor.constraint(equalTo: timestampSeparator.rightAnchor, constant: 4).isActive = true
         timestampLabel.centerYAnchor.constraint(equalTo: usernameBtn.centerYAnchor).isActive = true
+        
+        cellView.addSubview(starredSeparator)
+        starredSeparator.leftAnchor.constraint(equalTo: timestampLabel.rightAnchor, constant: 4).isActive = true
+        starredSeparator.bottomAnchor.constraint(equalTo: timestampLabel.centerYAnchor, constant: 6).isActive = true
+        
+        cellView.addSubview(starredLabel)
+        starredLabel.leftAnchor.constraint(equalTo: starredSeparator.rightAnchor, constant: 4).isActive = true
+        starredLabel.centerYAnchor.constraint(equalTo: timestampLabel.centerYAnchor).isActive = true
         
         cellView.addSubview(groupLabel)
         groupLabel.leftAnchor.constraint(equalTo: timestampLabel.rightAnchor, constant: 4).isActive = true
@@ -180,7 +213,6 @@ class ChatMessageCell: UICollectionViewCell {
     
     @objc private func handleGroupOwnerMenuBtn() {
         if let onGroupOwnerMenuBtnTapped = self.onGroupOwnerMenuBtnTapped {
-            print("called")
             onGroupOwnerMenuBtnTapped()
         }
     }

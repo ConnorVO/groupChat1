@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import OneSignal
+import Alamofire
 
 class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
     lazy var inputTextField: UITextField = {
@@ -18,17 +20,9 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
         return textField
     }()
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = textField.text ?? ""
-        guard let stringRange = Range(range, in: currentText) else { return false }
-        
-        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-        
-        return updatedText.count <= 140
-    }
-    
     let chatMessageCellId = "messagesCellId"
     let groupProfileMainCellId = "groupProfileMainCellId"
+    let chatSegmentedControlCellId = "chatSegmentedControlCellId"
     
     var groupIdFromPreviousController = "set by previous controller"
     var messageFromPreviousController: Message? = nil
@@ -37,6 +31,8 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupKeyboardObserver()
+        
         collectionView?.contentInset = UIEdgeInsetsMake(8, 0, 8, 0)
         collectionView?.backgroundColor = UIColor.white
         collectionView?.alwaysBounceVertical = true
@@ -44,25 +40,110 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: chatMessageCellId)
         collectionView?.register(GroupProfileMainCell.self, forCellWithReuseIdentifier: groupProfileMainCellId)
+        collectionView?.register(ChatSegmentedControlCell.self, forCellWithReuseIdentifier: chatSegmentedControlCellId)
         
         //use this for cooler interactive keyboard (not apple's documented ish)
         collectionView?.keyboardDismissMode = .interactive
-        
-        setupKeyboardObserver()
         
         //maybe move to viewDidAppear?
         observeMessages { (messageIds) in
             self.checkIfUserCameFromAMessage()
         }
         
+        observePinnedMessages()
+        
+        checkForPinnedMessage()
         
         //remove white space between collection view and navigation bar
         collectionView?.contentInset = UIEdgeInsetsMake(-10, 0, 0, 0)
+    
+    }
+    
+    var pinnedMessages = [Message]()
+    private func observePinnedMessages() {
+        let pinnedMessageRef = FIRDatabase.database().reference().child("groups").child(groupIdFromPreviousController).child("starredMessages")
+        pinnedMessageRef.observe(.childAdded, with: { (snapshot) in
+            let messageId = snapshot.key
+            let messagesRef = FIRDatabase.database().reference().child("all-messages").child(messageId)
+            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    let message = Message(dictionary: dictionary)
+                    message.messageId = snapshot.key
+                    self.pinnedMessages.append(message)
+                }
+            }, withCancel: nil)
+        }, withCancel: nil)
+    }
+    
+    var pinnedMessageView = PinnedMessageView()
+    private func checkForPinnedMessage() {
         
-        //fix top cell in section spacing issue
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
-        collectionView!.collectionViewLayout = layout
+        guard let currentUserUid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        
+        let ref = FIRDatabase.database().reference().child("groups").child(groupIdFromPreviousController).child("starredMessages").queryLimited(toLast: 1)
+        ref.observeSingleEvent(of: .childAdded, with: { (snapshot) in
+            
+            let messageId = snapshot.key
+            guard let messagePinnedTimestamp = (snapshot.value as? Int) else {
+                return
+            }
+            
+            let latestUserTimestampRef = FIRDatabase.database().reference().child("users").child(currentUserUid).child("timestampOfLastVisit")
+            latestUserTimestampRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                guard let userLastVisitTimestamp = (snapshot.value as? Int) else {
+                    return
+                }
+                
+                if messagePinnedTimestamp > userLastVisitTimestamp {
+                    self.setupPinnedMessageView(withMessageId: messageId)
+                }
+                
+            }, withCancel: nil)
+            
+        }, withCancel: nil)
+        
+    }
+    
+    private func setupPinnedMessageView(withMessageId messageId: String) {
+        pinnedMessageView = PinnedMessageView(frame: CGRect(x: 0, y: (navigationController?.navigationBar.frame.size.height)! + 20, width: self.view.bounds.width, height: 40))
+        self.view.addSubview(pinnedMessageView)
+        
+        pinnedMessageView.onCellBtnTapped = {
+            
+            guard let currentUserUid = FIRAuth.auth()?.currentUser?.uid else {
+                return
+            }
+            
+            let currentTimestamp = Int(NSDate().timeIntervalSince1970)
+            let userRef = FIRDatabase.database().reference().child("users").child(currentUserUid)
+            userRef.updateChildValues(["timestampOfLastVisit" : currentTimestamp])
+            
+            let groupRef = FIRDatabase.database().reference().child("groups").child(self.groupIdFromPreviousController).child("starredMessages")
+            groupRef.updateChildValues([messageId : currentTimestamp])
+            
+            self.handlePinnedMessageViewTapped(withMessageId: messageId)
+        }
+    }
+    
+    private func handlePinnedMessageViewTapped(withMessageId messageId: String) {
+        guard let pinnedMessage: Message = messages.first(where: { $0.messageId == messageId }) else {
+            return
+        }
+        
+        guard var pinnedMessageIndex = messages.index(of: pinnedMessage) else {
+            return
+        }
+        
+        pinnedMessageIndex = pinnedMessageIndex > 0 ? pinnedMessageIndex - 1 : 0
+        
+        let indexPath = IndexPath(item: pinnedMessageIndex, section: 2)
+        collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
+        
+        pinnedMessageView.removeFromSuperview()
     }
     
     private func checkIfUserCameFromAMessage() {
@@ -71,7 +152,8 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
             guard let index = self.messageIds.index(of: messageId) else {
                 return
             }
-            let indexPath = IndexPath(item: index, section: 1)
+            
+            let indexPath = IndexPath(item: index - 1, section: 2)
             collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
             self.messageIdFromPreviousController = nil
         }
@@ -82,15 +164,25 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
     }
     
     @objc func handleKeyboardDidShow() {
-        /*if messages.count > 0 {
-            let indexPath = IndexPath(item: messages.count - 1, section: 0)
-            collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
-        }*/
+        if messages.count > 0 {
+            let indexPath = IndexPath(item: messages.count - 1, section: 2)
+            if indexPath.row < collectionView!.numberOfItems(inSection: 2) {
+                collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
+            }
+        }
     }
     
     lazy var inputContainerView: UIView = {
+        var height: CGFloat = 50
+        if UIDevice().userInterfaceIdiom == .phone {
+            //iphone X - This allows it to cover tab bar like it is supposed to
+            if UIScreen.main.nativeBounds.height == 2436 {
+                height = 85
+            }
+        }
+        
         let containerView = UIView()
-        containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50)
+        containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: height)
         containerView.backgroundColor = UIColor.white
         
         let uploadImageView = UIImageView()
@@ -101,28 +193,29 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
         containerView.addSubview(uploadImageView)
         
         uploadImageView.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 4).isActive = true
-        uploadImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        uploadImageView.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
         uploadImageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
         uploadImageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
         let sendButton = UIButton(type: .system) //type: .system gives down state
         sendButton.setTitle("Send", for: .normal)
+        sendButton.setTitleColor(UIColor.green.main, for: .normal)
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
         containerView.addSubview(sendButton)
         
         sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
-        sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        sendButton.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
         sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        sendButton.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        sendButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         
         containerView.addSubview(self.inputTextField)
         
         self.inputTextField.leftAnchor.constraint(equalTo: uploadImageView.rightAnchor, constant: 8).isActive = true
-        self.inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        self.inputTextField.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
         self.inputTextField.rightAnchor.constraint(equalTo: sendButton.leftAnchor).isActive = true
-        self.inputTextField.heightAnchor.constraint(equalTo: containerView.heightAnchor).isActive = true
+        self.inputTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         let separatorLineView = UIView()
         separatorLineView.backgroundColor = UIColor(r: 220, g: 220, b: 220)
@@ -234,7 +327,7 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
         
         let groupMessagesRef = FIRDatabase.database().reference().child("groups").child(groupId).child("messages")
         groupMessagesRef.observe(.childAdded, with: { (snapshot) in
-            
+          
             let messageId = snapshot.key
             
             let messagesRef = FIRDatabase.database().reference().child("all-messages").child(messageId)
@@ -242,6 +335,7 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
                 
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     let message = Message(dictionary: dictionary)
+                    message.messageId = snapshot.key
                     self.messages.append(message)
                     self.messageIds.append(messageId)
                     
@@ -265,7 +359,7 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
                         //scroll to the last index
                         self.collectionView?.reloadData()
                         
-                        let indexPath = IndexPath(item: self.messages.count - 1, section: 1)
+                        let indexPath = IndexPath(item: self.messages.count - 1, section: 2)
                         self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
                     }
                 }
@@ -305,7 +399,7 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
         let fromId = FIRAuth.auth()!.currentUser!.uid
         let timestamp = Int(NSDate().timeIntervalSince1970)
         
-        var values: [String: Any] = ["groupId": groupId, "fromId": fromId, "timestamp": timestamp]
+        var values: [String: Any] = ["groupId": groupId, "fromId": fromId, "timestamp": timestamp, "isStarred": false]
         
         //key $0, value $1
         properties.forEach { (arg: (key: String, value: AnyObject)) in
@@ -343,18 +437,24 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 3
     }
     
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
+        if section != 2 {
             return 1
-        } else {
+        } else if activeSegment == 1 {
             return messages.count
+        } else {
+            return pinnedMessages.count
         }
     }
+    
+    var activeSegment = 1
+    var groupTitle = String()
+    var pinnedUsers = [User]()
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
@@ -366,6 +466,7 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     cell.groupImageView.loadImageUsingCacheWithUrlString(urlString: dictionary["groupImageUrl"] as! String)
                     cell.titleLabel.text = dictionary["groupName"] as? String
+                    self.groupTitle = (dictionary["groupName"] as? String)!
                     cell.groupDescriptionTextView.text = dictionary["groupDescription"] as? String
                 }
             }, withCancel: nil)
@@ -391,34 +492,66 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
             
             return cell
             
+        } else if indexPath.section == 1 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: chatSegmentedControlCellId, for: indexPath) as! ChatSegmentedControlCell
+            
+            cell.onStarredLabelTapped = {
+                if self.activeSegment != 2 {
+                    self.activeSegment = 2
+                    self.attemptReloadOfCollection()
+                }
+            }
+            
+            cell.onMessagesLabelTapped = {
+                if self.activeSegment != 1 {
+                    self.activeSegment = 1
+                    self.attemptReloadOfCollection()
+                }
+            }
+            
+            return cell
         } else {
+            
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: chatMessageCellId, for: indexPath) as! ChatMessageCell
+            
+            if activeSegment == 1 {
             
             if finalArr.count > 0 && finalArr.count > indexPath.row {
                 
-                guard let uid = (finalArr[indexPath.row]["user"] as! User).id, let username = (finalArr[indexPath.row]["user"] as! User).name, let profileImageUrl = (finalArr[indexPath.row]["user"] as! User).profileImageUrl, let timestamp = (finalArr[indexPath.row]["message"] as! Message).timestamp else {
+                guard let uid = (finalArr[indexPath.row]["user"] as! User).id, let username = (finalArr[indexPath.row]["user"] as! User).name, let profileImageUrl = (finalArr[indexPath.row]["user"] as! User).profileImageUrl, let timestamp = (finalArr[indexPath.row]["message"] as! Message).timestamp, let messageId = (finalArr[indexPath.row]["message"] as! Message).messageId, let isStarred = (finalArr[indexPath.row]["message"] as! Message).isStarred, let fromId = (finalArr[indexPath.row]["message"] as! Message).fromId else {
                     return cell
                 }
                 
-                if let message = (finalArr[indexPath.row]["message"] as! Message).text {
-                    cell.messageTextLabel.text = message
+                if isStarred {
+                    cell.starredSeparator.isHidden = false
+                    cell.starredLabel.isHidden = false
+                } else {
+                    cell.starredSeparator.isHidden = true
+                    cell.starredLabel.isHidden = true
+                }
+                
+                var messageText2 = String()
+                if let messageImageURL = (finalArr[indexPath.row]["message"] as! Message).imageURL {
+                    cell.messageImageView.loadImageUsingCacheWithUrlString(urlString: messageImageURL)
+                    cell.messageImageView.isHidden = false
+                    cell.messageTextView.isHidden = true
+                    let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
+                    cell.messageImageView.addGestureRecognizer(tap)
+                } else {
+                    //in here because for whatever reason if I move outside it prevents images from loading
+                    guard let messageText = (finalArr[indexPath.row]["message"] as! Message).text else {
+                        return cell
+                    }
+                    messageText2 = messageText
+                    cell.messageTextView.text = messageText
+                    cell.messageImageView.isHidden = true
+                    cell.messageTextView.isHidden = false
                 }
                 
                 cell.usernameBtn.setTitle(username, for: .normal)
                 cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
                 cell.groupLabel.isHidden = true
                 cell.usernameBtn.isUserInteractionEnabled = true
-                
-                if let messageImageURL = (finalArr[indexPath.row]["message"] as! Message).imageURL {
-                    cell.messageImageView.loadImageUsingCacheWithUrlString(urlString: messageImageURL)
-                    cell.messageImageView.isHidden = false
-                    cell.messageTextLabel.isHidden = true
-                    let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
-                    cell.messageImageView.addGestureRecognizer(tap)
-                } else {
-                    cell.messageImageView.isHidden = true
-                    cell.messageTextLabel.isHidden = false
-                }
                 
                 cell.onUsernameBtnTapped = {
                     self.handleUsernameButtonTap(uid: uid, indexPath: indexPath)
@@ -436,14 +569,19 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
                 
                 getGroupCreatorUid(completionHandler: { (response) in
                     let groupCreatorUid = response
+                    var isGroupCreator = true
+                    cell.groupOwnerMenuBtn.isHidden = false
                     
                     if currentUserUid != groupCreatorUid {
-                        cell.groupOwnerMenuBtn.isUserInteractionEnabled = false
+                        isGroupCreator = false
+                    }
+                    
+                    if currentUserUid != fromId && currentUserUid != groupCreatorUid {
                         cell.groupOwnerMenuBtn.isHidden = true
                     }
                     
                     cell.onGroupOwnerMenuBtnTapped = {
-                        self.handleGroupOwnerMenuBtnTapped()
+                        self.handleGroupOwnerMenuBtnTapped(withMessageText: messageText2, groupTitle: self.groupTitle, messageId: messageId, groupId: self.groupIdFromPreviousController, isGroupCreator: isGroupCreator, messageFromId: fromId, indexPathRow: indexPath.row)
                     }
                 })
                 
@@ -451,10 +589,42 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
             }
             
             return cell
+            } else {
+                
+                guard let messageText = pinnedMessages[indexPath.row].text, let uid = pinnedMessages[indexPath.row].fromId, let timestamp = pinnedMessages[indexPath.row].timestamp, let messageId = pinnedMessages[indexPath.row].messageId else {
+                    return cell
+                }
+                
+                let pinnedUser = User()
+                let userRef = FIRDatabase.database().reference().child("users").child(uid)
+                userRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                    if let dictionary = snapshot.value as? [String: AnyObject] {
+                        pinnedUser.name = dictionary["name"] as? String
+                        pinnedUser.profileImageUrl = dictionary["profileImageURL"] as? String
+                        
+                        if let username = pinnedUser.name, let userProfileImageUrl = pinnedUser.profileImageUrl {
+                            cell.usernameBtn.setTitle(username, for: .normal)
+                            cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: userProfileImageUrl)
+                        }
+                        //self.pinnedUsers.append(pinnedUser)
+                        
+                        self.attemptReloadOfCollection()
+                    }
+                }, withCancel: nil)
+                
+                cell.messageTextView.text = messageText
+                cell.starredLabel.isHidden = false
+                cell.starredSeparator.isHidden = false
+                cell.groupOwnerMenuBtn.isHidden = true
+                
+                setupMessageTime(cell: cell, timestamp: timestamp)
+                
+                return cell
+            }
         }
     }
     
-    private func handleGroupOwnerMenuBtnTapped() {
+    private func handleGroupOwnerMenuBtnTapped(withMessageText messageText: String, groupTitle: String, messageId: String, groupId: String, isGroupCreator: Bool, messageFromId: String, indexPathRow: Int) {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { action in
@@ -462,24 +632,130 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
         }
         alertController.addAction(cancelAction)
         
-        let pinActionWithoutNotify = UIAlertAction(title: "Pin Message", style: .default) { action in
-            // ...
-        }
-        alertController.addAction(pinActionWithoutNotify)
+        if isGroupCreator {
         
-        let pinAndNotifyAction = UIAlertAction(title: "Pin Message and Notify Group", style: .default) { action in
-            // ...
+            let pinActionWithoutNotify = UIAlertAction(title: "Pin Message", style: .default) { action in
+                // ...
+                //TODO
+                /*self.getOneSignalIdsOfGroupMembers(completionHandler: { (users) in
+                    self.sendNotification(to: users, withMessageText: messageText, withGroupName: groupTitle)
+                })*/
+                
+                let currentTimestamp = Int(NSDate().timeIntervalSince1970)
+                
+                let groupRef = FIRDatabase.database().reference().child("groups").child(self.groupIdFromPreviousController).child("starredMessages")
+                groupRef.updateChildValues([messageId : currentTimestamp])
+                
+                let messageRef = FIRDatabase.database().reference().child("all-messages").child(messageId)
+                messageRef.updateChildValues(["isStarred" : true])
+                
+            }
+            alertController.addAction(pinActionWithoutNotify)
+            
+            let pinAndNotifyAction = UIAlertAction(title: "Pin Message and Notify Group", style: .default) { action in
+                // ...
+                
+                let currentTimestamp = Int(NSDate().timeIntervalSince1970)
+                
+                let groupRef = FIRDatabase.database().reference().child("groups").child(self.groupIdFromPreviousController).child("starredMessages")
+                groupRef.updateChildValues([messageId : currentTimestamp])
+                
+                let messageRef = FIRDatabase.database().reference().child("all-messages").child(messageId)
+                messageRef.updateChildValues(["isStarred" : true])
+                
+                OneSignal.getTags({ (tags) in
+                    print(Array(tags!.values))
+                })
+            }
+           /* let parameters: Parameters = [
+            [
+                "app_id": "5eb5a37e-b458-11e3-ac11-000c2940e62c",
+                "filters": [
+                    ["field": "tag", "key": "level", "relation": "=", "value": "10"],
+                ],
+                "data": ["foo": "bar"],
+                "contents": ["en": "English Message"]
+            ]
+            ]
+            
+            let json = [
+                "filters": [
+                    "field": "tag", "key": "uid", "relation": "exists"
+                ],
+                "contents": ["en": "First Message"], // Required unless "content_available": true or "template_id" is set
+                "headings": ["en": "Notification Title"],
+                "subtitle": ["en": "An English Subtitle"],
+                // If want to open a url with in-app browser
+                //"url": "https://google.com",
+                // If you want to deep link and pass a URL to your webview, use "data" parameter and use the key in the AppDelegate's notificationOpenedBlock
+                "data": ["OpenURL": "https://imgur.com"],
+                "ios_badgeType": "Increase",
+                "ios_badgeCount": 1
+                ] as [String : Any]
+           
+            // All three of these calls are equivalent
+            //Alamofire.request("https://onesignal.com/api/v1/notifications", method: .post, parameters: parameters)*/
+            
+            alertController.addAction(pinAndNotifyAction)
         }
-        alertController.addAction(pinAndNotifyAction)
         
-        /*let destroyAction = UIAlertAction(title: "Destroy", style: .destructive) { action in
-            print(action)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { action in
+            FIRDatabase.database().reference().child("groups").child(self.groupIdFromPreviousController).child("messages").child(messageId).removeValue()
+            
+            FIRDatabase.database().reference().child("groups").child(self.groupIdFromPreviousController).child("starredMessages").child(messageId).removeValue()
+            
+            FIRDatabase.database().reference().child("all-messages").child(messageId).removeValue()
+            
+            FIRDatabase.database().reference().child("user-messages").child(messageFromId).child(messageId).removeValue()
+            
+            FIRDatabase.database().reference().child("groups-messages").child(self.groupIdFromPreviousController).child(messageFromId).child(messageId).removeValue()
+            
+            if let message = self.finalArr[indexPathRow]["message"] as? Message {
+                
+                if self.messages.contains(message) {
+                    guard let messageIndex = self.messages.index(of: message) else {
+                        return
+                    }
+                    self.messages.remove(at: messageIndex)
+                }
+                
+                if self.pinnedMessages.contains(message) {
+                    guard let messageIndex = self.pinnedMessages.index(of: message) else {
+                        return
+                    }
+                    self.pinnedMessages.remove(at: messageIndex)
+                }
+                
+                if self.messageIds.contains(messageFromId) {
+                    guard let messageIndex = self.messageIds.index(of: messageFromId) else {
+                        return
+                    }
+                    self.messageIds.remove(at: messageIndex)
+                }
+                
+                //self.attemptReloadOfCollection()
+                //NOT WORKING YET - NOT UPDATING PROPERLY without having to leave and come back
+                
+            }
         }
-        alertController.addAction(destroyAction)*/
+        alertController.addAction(deleteAction)
         
         self.present(alertController, animated: true) {
             // ...
         }
+    }
+    
+    var oneSignalIdsOfGroupMembers = [String]()
+    
+    private func getOneSignalIdsOfGroupMembers(completionHandler: @escaping ([String]) -> ()) {
+        
+        let ref = FIRDatabase.database().reference().child("groups").child(groupIdFromPreviousController).child("groupMemberOneSignalIds")
+        ref.observe(.value, with: { (snapshot) in
+            for child in snapshot.children.allObjects as! [FIRDataSnapshot] {
+                self.oneSignalIdsOfGroupMembers.append(child.key)
+            }
+            completionHandler(self.oneSignalIdsOfGroupMembers)
+        }, withCancel: nil)
     }
     
     var previousDescription: String?
@@ -500,7 +776,13 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
             textView.resignFirstResponder()
             return false
         }
-        return true
+        
+        let currentText = textView.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+         
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
+         print(updatedText.count)
+        return updatedText.count <= 90
     }
     
     private func getGroupCreatorUid(completionHandler: @escaping (String) -> ()) {
@@ -655,9 +937,10 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         if indexPath.section == 0 {
             return CGSize(width: UIScreen.main.bounds.width, height: 120)
+        } else if indexPath.section == 1 {
+            return CGSize(width: UIScreen.main.bounds.width, height: 40)
         } else {
             var height: CGFloat = 80
             
@@ -684,6 +967,14 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        if section == 2 {
+            return UIEdgeInsetsMake(10, 0, 0, 0)
+        } else {
+            return UIEdgeInsets.zero
+        }
+    }
+    
     private func estimateFrameForText(text: String) -> CGRect {
         //width is similar to bubble view width and height is arbitrarilly large
         let size = CGSize(width: 200, height: 1000)
@@ -693,4 +984,59 @@ class GroupLogController: UICollectionViewController, UITextFieldDelegate, UICol
         return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
+    func sendNotification(to users: [String], withMessageText messageText: String, withGroupName: String) {
+        // See the Create notification REST API POST call for a list of all possible options: https://documentation.onesignal.com/reference#create-notification
+        // NOTE: You can only use include_player_ids as a targeting parameter from your app. Other target options such as tags and included_segments require your OneSignal App REST API key which can only be used from your server.
+        
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        let pushToken = status.subscriptionStatus.pushToken
+        //let userId = status.subscriptionStatus.userId
+        
+        if pushToken != nil {
+           // if messageText.extractURLs().count > 0 {
+                let notificationContent = [
+                    "include_player_ids": users,
+                    "contents": ["en": messageText], // Required unless "content_available": true or "template_id" is set
+                    "headings": ["en": groupTitle],
+                    // "subtitle": ["en": "An English Subtitle"],
+                    // If want to open a url with in-app browser
+                    "url": "\(messageText.extractURLs()[0])",
+                    // If you want to deep link and pass a URL to your webview, use "data" parameter and use the key in the AppDelegate's notificationOpenedBlock
+                    //"data": ["OpenURL": "https://imgur.com"],
+                    //"ios_attachments": ["id" : "https://www.t-nation.com/system/publishing/article_assets/4433/original/Bad-Butt.jpg?ts=1487365755"],
+                    "ios_badgeType": "Increase",
+                    "ios_badgeCount": 1
+                    ] as [String : Any]
+          /*  } *//*else {
+                let notificationContent = [
+                    "include_player_ids": users,
+                    "contents": ["en": messageText], // Required unless "content_available": true or "template_id" is set
+                    "headings": ["en": groupTitle],
+                   // "subtitle": ["en": "An English Subtitle"],
+                    // If want to open a url with in-app browser
+                    //"url": "https://www.t-nation.com/system/publishing/article_assets/4433/original/Bad-Butt.jpg?ts=1487365755",
+                    // If you want to deep link and pass a URL to your webview, use "data" parameter and use the key in the AppDelegate's notificationOpenedBlock
+                    //"data": ["OpenURL": "https://imgur.com"],
+                    //"ios_attachments": ["id" : "https://www.t-nation.com/system/publishing/article_assets/4433/original/Bad-Butt.jpg?ts=1487365755"],
+                    "ios_badgeType": "Increase",
+                    "ios_badgeCount": 1
+                    ] as [String : Any]
+            }*/
+            OneSignal.postNotification(notificationContent)
+        }
+    }
+    
+    
+}
+
+public enum HTTPMethod: String {
+    case options = "OPTIONS"
+    case get     = "GET"
+    case head    = "HEAD"
+    case post    = "POST"
+    case put     = "PUT"
+    case patch   = "PATCH"
+    case delete  = "DELETE"
+    case trace   = "TRACE"
+    case connect = "CONNECT"
 }

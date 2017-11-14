@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import OneSignal
 
 class UserProfileController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -78,6 +79,7 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
             
         }, withCancel: nil)
         
+        self.collectionView?.reloadData()
     }
     
     var messages = [Message]()
@@ -106,8 +108,6 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
             }, withCancel: nil)
         }, withCancel: nil)
     }
-    
-    
     
     var groups = [Group]()
     
@@ -164,6 +164,12 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: userProfileMainCellId, for: indexPath) as! UserProfileMainCell
+        
+        guard let currentUserUid = FIRAuth.auth()?.currentUser?.uid else {
+            return cell
+        }
+        
         if indexPath.section == 0 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: userProfileMainCellId, for: indexPath) as! UserProfileMainCell
         
@@ -177,10 +183,6 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
             
             if let userDescription = user.userDescription {
                 cell.userDescriptionTextView.text = userDescription
-            }
-            
-            guard let currentUserUid = FIRAuth.auth()?.currentUser?.uid else {
-                return cell
             }
             
             if currentUserUid != userUid {
@@ -225,6 +227,12 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
                    
                     cell.titleLabel.text = group.groupName
                     cell.descriptionLabel.text = group.groupDescription
+                    cell.joinButton.setTitle("\u{2713}", for: .normal)
+                    cell.joinButton.setTitleColor(UIColor.green.main, for: .normal)
+                    
+                    if currentUserUid != userUid {
+                        cell.joinButton.isHidden = true
+                    }
                     
                     cell.onJoinButtonTapped = {
                         self.handleJoinButtonTap(cell: cell, indexPath: indexPath)
@@ -233,21 +241,29 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
                     if let groupImageUrl = group.groupImageUrl {
                         cell.groupImageView.loadImageUsingCacheWithUrlString(urlString: groupImageUrl)
                     }
-                    
-                    checkIfUserIsInGroup(cell: cell, indexPath: indexPath)
+            
                 }
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: chatMessageCellId, for: indexPath) as! ChatMessageCell
                 cell.usernameBtn.setTitle(user.name, for: .normal)
-                cell.messageTextLabel.text = messages[indexPath.row].text
-                //cell.groupOwnerMenuBtn.isHidden = true
+                cell.messageTextView.text = messages[indexPath.row].text
+                cell.groupOwnerMenuBtn.isHidden = true
                 guard let timestamp = messages[indexPath.row].timestamp else {
                     return cell
                 }
                 if let userProfileImageUrl = user.profileImageUrl {
                     cell.profileImageView.loadImageUsingCacheWithUrlString(urlString: userProfileImageUrl)
                 }
+                
+                if let messageImageURL = messages[indexPath.row].imageURL {
+                    cell.messageImageView.loadImageUsingCacheWithUrlString(urlString: messageImageURL)
+                    cell.messageImageView.isHidden = false
+                    cell.messageTextView.isHidden = true
+                    let tap = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
+                    cell.messageImageView.addGestureRecognizer(tap)
+                }
+                
                 setupMessageTime(cell: cell, timestamp: timestamp)
                 
                 if let groupId = messages[indexPath.row].groupId {
@@ -265,35 +281,24 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
         }
     }
     
-    var joinedGroups = [String]()
-    private func checkIfUserIsInGroup(cell: GroupCell, indexPath: IndexPath) {
-        
-        joinedGroups.removeAll()
-        
-        guard let currentUserId = FIRAuth.auth()?.currentUser?.uid else {
-            return
-        }
-        
-        guard let groupId = groups[indexPath.row].groupId else {
-            return
-        }
-        
-        let ref = FIRDatabase.database().reference().child("users").child(currentUserId).child("groups")
-        ref.observe(.childAdded, with: { (snapshot) in
-            
-            if snapshot.key == groupId {
-                self.joinedGroups.append(groupId)
-            }
-            
-            if self.joinedGroups.contains(groupId) {
-                cell.joinButton.setTitleColor(UIColor.green.main, for: .normal)
-                cell.joinButton.setTitle("joined", for: .normal)
-            } else {
-                cell.joinButton.setTitleColor(UIColor.red, for: .normal)
-                cell.joinButton.setTitle("join", for: .normal)
-            }
-            
-        })
+    @IBAction func imageTapped(_ sender: UITapGestureRecognizer) {
+        let imageView = sender.view as! UIImageView
+        let newImageView = UIImageView(image: imageView.image)
+        newImageView.frame = UIScreen.main.bounds
+        newImageView.backgroundColor = .black
+        newImageView.contentMode = .scaleAspectFit
+        newImageView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
+        newImageView.addGestureRecognizer(tap)
+        self.view.addSubview(newImageView)
+        self.navigationController?.isNavigationBarHidden = true
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
+    @objc func dismissFullscreenImage(_ sender: UITapGestureRecognizer) {
+        self.navigationController?.isNavigationBarHidden = false
+        self.tabBarController?.tabBar.isHidden = false
+        sender.view?.removeFromSuperview()
     }
     
     private func handleProfileImageViewBtnTapped() {
@@ -419,9 +424,25 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
             return
         }
         
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        guard let oneSignalUserID = status.subscriptionStatus.userId else {
+            return
+        }
+        
         //remove user from group and group from user
+        FIRDatabase.database().reference().child("groups").child(groupId).child("memberCount").observeSingleEvent(of: .value, with: { (snapshot) in
+            if let numberOfMembers = snapshot.value as? Int {
+                FIRDatabase.database().reference().child("groups").child(groupId).updateChildValues(["memberCount" : numberOfMembers - 1])
+            }
+        }, withCancel: nil)
+        
         FIRDatabase.database().reference().child("groups").child(groupId).child("groupMembers").child(currentUserId).removeValue()
         FIRDatabase.database().reference().child("users").child(currentUserId).child("groups").child(groupId).removeValue()
+        
+        FIRDatabase.database().reference().child("groups").child(groupId).child("groupMemberOneSignalIds").child(oneSignalUserID).removeValue()
+        
+        cell.joinButton.setTitle("+", for: .normal)
+        cell.joinButton.setTitleColor(UIColor.red, for: .normal)
         
         observeUserGroups()
     }
@@ -433,8 +454,42 @@ class UserProfileController: UICollectionViewController, UITextFieldDelegate, UI
         } else if indexPath.section == 1 {
             return CGSize(width: UIScreen.main.bounds.width, height: 40)
         } else {
-            return CGSize(width: UIScreen.main.bounds.width, height: 80)
+            if activeSegment == 1 {
+                return CGSize(width: UIScreen.main.bounds.width, height: 100)
+            } else {
+                var height: CGFloat = 80
+                
+                let message = messages[indexPath.row]
+                
+                if let text = message.text {
+                    height = estimateFrameForText(text: text).height + 10 //add 20 for a little spacing
+                } else if let imageHeight = message.imageHeight?.floatValue, let imageWidth = message.imageWidth?.floatValue {
+                    //h1 = h2 / w2 * w1
+                    let screenWidth: Float = Float(UIScreen.main.bounds.width)
+                    height = CGFloat(imageHeight / imageWidth * screenWidth) + 80
+                    
+                }
+                
+                if height < 50 {
+                    return CGSize(width: UIScreen.main.bounds.width, height: 80) //one line height = 29.0937
+                } else if height < 80 {
+                    return CGSize(width: UIScreen.main.bounds.width, height: 95) //two line height = 67.28125
+                } else if height < 100{
+                    return CGSize(width: UIScreen.main.bounds.width, height: 110) //three line height = 86.375
+                } else {
+                    return CGSize(width: UIScreen.main.bounds.width, height: height)
+                }
+            }
         }
+    }
+    
+    private func estimateFrameForText(text: String) -> CGRect {
+        //width is similar to bubble view width and height is arbitrarilly large
+        let size = CGSize(width: 200, height: 1000)
+        //idk why you have to set options like this
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

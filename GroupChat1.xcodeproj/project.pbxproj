@@ -8,13 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		81DD102FEC4B53C6925537A0 /* Pods_GroupChat1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35130C13EDD8AE5735B7BEB8 /* Pods_GroupChat1.framework */; };
+		E38C70A00F885B5FCA90E950 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 654888DB7A11D4A1C13DBD54 /* Pods_OneSignalNotificationServiceExtension.framework */; };
 		F60318431F86879500201278 /* GroupLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60318421F86879500201278 /* GroupLogController.swift */; };
+		F60C857B1FB2A5F90047E411 /* ChatSegmentedControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60C857A1FB2A5F90047E411 /* ChatSegmentedControlCell.swift */; };
 		F61702C71F7E985100126AE5 /* NewGroupControllerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702C61F7E985100126AE5 /* NewGroupControllerHandlers.swift */; };
 		F61702C91F82A5AB00126AE5 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702C81F82A5AB00126AE5 /* CustomTabBarController.swift */; };
 		F61702CB1F82AA0A00126AE5 /* SearchForGroupsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702CA1F82AA0A00126AE5 /* SearchForGroupsController.swift */; };
 		F61702CD1F82AB1200126AE5 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702CC1F82AB1200126AE5 /* Group.swift */; };
 		F61702D01F82E24500126AE5 /* GroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61702CF1F82E24500126AE5 /* GroupCell.swift */; };
 		F62838671F8FBE6800166692 /* GroupProfileMainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62838661F8FBE6800166692 /* GroupProfileMainCell.swift */; };
+		F654462F1FA8F39900C5AE02 /* RandomAlphanumericKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = F654462E1FA8F39900C5AE02 /* RandomAlphanumericKey.swift */; };
 		F66E59111F999F0800039F48 /* TextViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66E59101F999F0800039F48 /* TextViewExtension.swift */; };
 		F6718F3E1F90492500061257 /* ProfileSegmentedControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6718F3D1F90492500061257 /* ProfileSegmentedControlCell.swift */; };
 		F686E6E31F8488A900515AE8 /* JoinNewGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F686E6E21F8488A900515AE8 /* JoinNewGroupController.swift */; };
@@ -22,6 +25,9 @@
 		F6A8AD691F8C488000721B8C /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A8AD681F8C488000721B8C /* UserProfileController.swift */; };
 		F6A8AD6B1F8C543700721B8C /* UserProfileMainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A8AD6A1F8C543700721B8C /* UserProfileMainCell.swift */; };
 		F6B178901F9457C200B7BFE8 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B1788F1F9457C200B7BFE8 /* DateExtension.swift */; };
+		F6C1ECF01FA80A2000DFBD0C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F6C1ECEF1FA80A2000DFBD0C /* GoogleService-Info.plist */; };
+		F6C1ECF91FA8D0FA00DFBD0C /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6C1ECF81FA8D0FA00DFBD0C /* NotificationService.swift */; };
+		F6C1ECFD1FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F6C1ECF61FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F6DE491E1F7C62F700E32FC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE491D1F7C62F700E32FC4 /* AppDelegate.swift */; };
 		F6DE49201F7C62F700E32FC4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE491F1F7C62F700E32FC4 /* ViewController.swift */; };
 		F6DE49231F7C62F700E32FC4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6DE49211F7C62F700E32FC4 /* Main.storyboard */; };
@@ -32,26 +38,56 @@
 		F6DE49361F7C634C00E32FC4 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49351F7C634C00E32FC4 /* LoginController.swift */; };
 		F6DE49381F7C636C00E32FC4 /* LoginControllerHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49371F7C636C00E32FC4 /* LoginControllerHandlers.swift */; };
 		F6DE493B1F7C638900E32FC4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE493A1F7C638900E32FC4 /* Extensions.swift */; };
-		F6DE49411F7C646200E32FC4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F6DE49401F7C646100E32FC4 /* GoogleService-Info.plist */; };
 		F6DE49441F7C699E00E32FC4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49431F7C699E00E32FC4 /* User.swift */; };
 		F6DE49461F7C903500E32FC4 /* NewGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6DE49451F7C903500E32FC4 /* NewGroupController.swift */; };
 		F6F6658F1F8745410027EDDA /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F6658E1F8745410027EDDA /* Message.swift */; };
 		F6F665911F87DA5F0027EDDA /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F665901F87DA5F0027EDDA /* ChatMessageCell.swift */; };
 		F6F665941F87DB000027EDDA /* InsetLabelTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F665931F87DB000027EDDA /* InsetLabelTop.swift */; };
 		F6F665961F87DB1E0027EDDA /* InsetLabelBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F665951F87DB1E0027EDDA /* InsetLabelBottom.swift */; };
+		F6FF1BD81FAC1B4C005CF988 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FF1BD71FAC1B4C005CF988 /* String.swift */; };
+		F6FF1BDC1FACF998005CF988 /* PinnedMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FF1BDB1FACF998005CF988 /* PinnedMessageView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F6C1ECFB1FA8D0FA00DFBD0C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F6DE49121F7C62F600E32FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F6C1ECF51FA8D0FA00DFBD0C;
+			remoteInfo = OneSignalNotificationServiceExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F6C1ED011FA8D0FA00DFBD0C /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F6C1ECFD1FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		25323C792474C839ACF1F252 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		35130C13EDD8AE5735B7BEB8 /* Pods_GroupChat1.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GroupChat1.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AA846803945F963B907DBF1 /* Pods-GroupChat1.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupChat1.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GroupChat1/Pods-GroupChat1.debug.xcconfig"; sourceTree = "<group>"; };
+		654888DB7A11D4A1C13DBD54 /* Pods_OneSignalNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneSignalNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		87F2FE09341B075B515B79B6 /* Pods-GroupChat1.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GroupChat1.release.xcconfig"; path = "Pods/Target Support Files/Pods-GroupChat1/Pods-GroupChat1.release.xcconfig"; sourceTree = "<group>"; };
 		F60318421F86879500201278 /* GroupLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupLogController.swift; sourceTree = "<group>"; };
+		F603F1BE384C63AB3A8AD94E /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		F60C857A1FB2A5F90047E411 /* ChatSegmentedControlCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSegmentedControlCell.swift; sourceTree = "<group>"; };
 		F61702C61F7E985100126AE5 /* NewGroupControllerHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupControllerHandlers.swift; sourceTree = "<group>"; };
 		F61702C81F82A5AB00126AE5 /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		F61702CA1F82AA0A00126AE5 /* SearchForGroupsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchForGroupsController.swift; sourceTree = "<group>"; };
 		F61702CC1F82AB1200126AE5 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		F61702CF1F82E24500126AE5 /* GroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCell.swift; sourceTree = "<group>"; };
 		F62838661F8FBE6800166692 /* GroupProfileMainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupProfileMainCell.swift; sourceTree = "<group>"; };
+		F654462E1FA8F39900C5AE02 /* RandomAlphanumericKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomAlphanumericKey.swift; sourceTree = "<group>"; };
 		F66E59101F999F0800039F48 /* TextViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewExtension.swift; sourceTree = "<group>"; };
 		F6718F3D1F90492500061257 /* ProfileSegmentedControlCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSegmentedControlCell.swift; sourceTree = "<group>"; };
 		F686E6E21F8488A900515AE8 /* JoinNewGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinNewGroupController.swift; sourceTree = "<group>"; };
@@ -59,6 +95,11 @@
 		F6A8AD681F8C488000721B8C /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
 		F6A8AD6A1F8C543700721B8C /* UserProfileMainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileMainCell.swift; sourceTree = "<group>"; };
 		F6B1788F1F9457C200B7BFE8 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		F6C1ECEF1FA80A2000DFBD0C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F6C1ECF11FA80CA800DFBD0C /* GroupChat1.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GroupChat1.entitlements; sourceTree = "<group>"; };
+		F6C1ECF61FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6C1ECF81FA8D0FA00DFBD0C /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		F6C1ECFA1FA8D0FA00DFBD0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F6DE491A1F7C62F600E32FC4 /* GroupChat1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroupChat1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6DE491D1F7C62F700E32FC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F6DE491F1F7C62F700E32FC4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -71,16 +112,26 @@
 		F6DE49351F7C634C00E32FC4 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		F6DE49371F7C636C00E32FC4 /* LoginControllerHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginControllerHandlers.swift; sourceTree = "<group>"; };
 		F6DE493A1F7C638900E32FC4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		F6DE49401F7C646100E32FC4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F6DE49431F7C699E00E32FC4 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		F6DE49451F7C903500E32FC4 /* NewGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupController.swift; sourceTree = "<group>"; };
 		F6F6658E1F8745410027EDDA /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		F6F665901F87DA5F0027EDDA /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		F6F665931F87DB000027EDDA /* InsetLabelTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabelTop.swift; sourceTree = "<group>"; };
 		F6F665951F87DB1E0027EDDA /* InsetLabelBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetLabelBottom.swift; sourceTree = "<group>"; };
+		F6FF1BD61FAAD2DA005CF988 /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
+		F6FF1BD71FAC1B4C005CF988 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		F6FF1BDB1FACF998005CF988 /* PinnedMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinnedMessageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F6C1ECF31FA8D0FA00DFBD0C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E38C70A00F885B5FCA90E950 /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F6DE49171F7C62F600E32FC4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -97,6 +148,8 @@
 			children = (
 				3AA846803945F963B907DBF1 /* Pods-GroupChat1.debug.xcconfig */,
 				87F2FE09341B075B515B79B6 /* Pods-GroupChat1.release.xcconfig */,
+				F603F1BE384C63AB3A8AD94E /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				25323C792474C839ACF1F252 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -105,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				35130C13EDD8AE5735B7BEB8 /* Pods_GroupChat1.framework */,
+				654888DB7A11D4A1C13DBD54 /* Pods_OneSignalNotificationServiceExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -117,14 +171,27 @@
 				F6A8AD6A1F8C543700721B8C /* UserProfileMainCell.swift */,
 				F62838661F8FBE6800166692 /* GroupProfileMainCell.swift */,
 				F6718F3D1F90492500061257 /* ProfileSegmentedControlCell.swift */,
+				F60C857A1FB2A5F90047E411 /* ChatSegmentedControlCell.swift */,
+				F6FF1BDB1FACF998005CF988 /* PinnedMessageView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		F6C1ECF71FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				F6FF1BD61FAAD2DA005CF988 /* OneSignalNotificationServiceExtension.entitlements */,
+				F6C1ECF81FA8D0FA00DFBD0C /* NotificationService.swift */,
+				F6C1ECFA1FA8D0FA00DFBD0C /* Info.plist */,
+			);
+			path = OneSignalNotificationServiceExtension;
 			sourceTree = "<group>";
 		};
 		F6DE49111F7C62F600E32FC4 = {
 			isa = PBXGroup;
 			children = (
 				F6DE491C1F7C62F700E32FC4 /* GroupChat1 */,
+				F6C1ECF71FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension */,
 				F6DE491B1F7C62F600E32FC4 /* Products */,
 				00463919C7C708EB6C024344 /* Pods */,
 				66F52333FD5563745F97A60A /* Frameworks */,
@@ -135,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				F6DE491A1F7C62F600E32FC4 /* GroupChat1.app */,
+				F6C1ECF61FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -142,6 +210,7 @@
 		F6DE491C1F7C62F700E32FC4 /* GroupChat1 */ = {
 			isa = PBXGroup;
 			children = (
+				F6C1ECF11FA80CA800DFBD0C /* GroupChat1.entitlements */,
 				F6F665921F87DAF10027EDDA /* Helpers */,
 				F6DE49421F7C698700E32FC4 /* Models */,
 				F61702CE1F82E23700126AE5 /* View */,
@@ -154,7 +223,7 @@
 				F6DE49291F7C62F700E32FC4 /* LaunchScreen.storyboard */,
 				F6DE492C1F7C62F700E32FC4 /* Info.plist */,
 				F6DE49241F7C62F700E32FC4 /* GroupChat1.xcdatamodeld */,
-				F6DE49401F7C646100E32FC4 /* GoogleService-Info.plist */,
+				F6C1ECEF1FA80A2000DFBD0C /* GoogleService-Info.plist */,
 			);
 			path = GroupChat1;
 			sourceTree = "<group>";
@@ -183,6 +252,7 @@
 				F6DE493A1F7C638900E32FC4 /* Extensions.swift */,
 				F6B1788F1F9457C200B7BFE8 /* DateExtension.swift */,
 				F66E59101F999F0800039F48 /* TextViewExtension.swift */,
+				F6FF1BD71FAC1B4C005CF988 /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -202,6 +272,7 @@
 			children = (
 				F6F665931F87DB000027EDDA /* InsetLabelTop.swift */,
 				F6F665951F87DB1E0027EDDA /* InsetLabelBottom.swift */,
+				F654462E1FA8F39900C5AE02 /* RandomAlphanumericKey.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -209,6 +280,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F6C1ECF51FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F6C1ED001FA8D0FA00DFBD0C /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
+			buildPhases = (
+				16276072FAAED6EC326FE902 /* [CP] Check Pods Manifest.lock */,
+				F6C1ECF21FA8D0FA00DFBD0C /* Sources */,
+				F6C1ECF31FA8D0FA00DFBD0C /* Frameworks */,
+				F6C1ECF41FA8D0FA00DFBD0C /* Resources */,
+				F21DF469D6AF95302457F816 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OneSignalNotificationServiceExtension;
+			productName = OneSignalNotificationServiceExtension;
+			productReference = F6C1ECF61FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		F6DE49191F7C62F600E32FC4 /* GroupChat1 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F6DE492F1F7C62F700E32FC4 /* Build configuration list for PBXNativeTarget "GroupChat1" */;
@@ -219,10 +309,12 @@
 				F6DE49181F7C62F600E32FC4 /* Resources */,
 				D9B6ED1BF3F024317FAB6415 /* [CP] Embed Pods Frameworks */,
 				8488730843CB3EB9DD527359 /* [CP] Copy Pods Resources */,
+				F6C1ED011FA8D0FA00DFBD0C /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F6C1ECFC1FA8D0FA00DFBD0C /* PBXTargetDependency */,
 			);
 			name = GroupChat1;
 			productName = GroupChat1;
@@ -235,12 +327,29 @@
 		F6DE49121F7C62F600E32FC4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0900;
+				LastSwiftUpdateCheck = 0910;
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Connor Van Ooyen";
 				TargetAttributes = {
+					F6C1ECF51FA8D0FA00DFBD0C = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 0;
+							};
+						};
+					};
 					F6DE49191F7C62F600E32FC4 = {
 						CreatedOnToolsVersion = 9.0;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -258,17 +367,25 @@
 			projectRoot = "";
 			targets = (
 				F6DE49191F7C62F600E32FC4 /* GroupChat1 */,
+				F6C1ECF51FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F6C1ECF41FA8D0FA00DFBD0C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F6DE49181F7C62F600E32FC4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				F6DE492B1F7C62F700E32FC4 /* LaunchScreen.storyboard in Resources */,
-				F6DE49411F7C646200E32FC4 /* GoogleService-Info.plist in Resources */,
+				F6C1ECF01FA80A2000DFBD0C /* GoogleService-Info.plist in Resources */,
 				F6DE49281F7C62F700E32FC4 /* Assets.xcassets in Resources */,
 				F6DE49231F7C62F700E32FC4 /* Main.storyboard in Resources */,
 			);
@@ -277,6 +394,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		16276072FAAED6EC326FE902 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OneSignalNotificationServiceExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7F27BF76D5AC74800601F032 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -317,11 +452,13 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-GroupChat1/Pods-GroupChat1-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 			);
@@ -330,13 +467,37 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GroupChat1/Pods-GroupChat1-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F21DF469D6AF95302457F816 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F6C1ECF21FA8D0FA00DFBD0C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F6C1ECF91FA8D0FA00DFBD0C /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F6DE49161F7C62F600E32FC4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6FF1BD81FAC1B4C005CF988 /* String.swift in Sources */,
 				F6F665941F87DB000027EDDA /* InsetLabelTop.swift in Sources */,
 				F6DE49381F7C636C00E32FC4 /* LoginControllerHandlers.swift in Sources */,
 				F60318431F86879500201278 /* GroupLogController.swift in Sources */,
@@ -345,6 +506,7 @@
 				F6B178901F9457C200B7BFE8 /* DateExtension.swift in Sources */,
 				F6F665961F87DB1E0027EDDA /* InsetLabelBottom.swift in Sources */,
 				F6A8AD691F8C488000721B8C /* UserProfileController.swift in Sources */,
+				F60C857B1FB2A5F90047E411 /* ChatSegmentedControlCell.swift in Sources */,
 				F686E6E31F8488A900515AE8 /* JoinNewGroupController.swift in Sources */,
 				F62838671F8FBE6800166692 /* GroupProfileMainCell.swift in Sources */,
 				F61702C71F7E985100126AE5 /* NewGroupControllerHandlers.swift in Sources */,
@@ -352,12 +514,14 @@
 				F6718F3E1F90492500061257 /* ProfileSegmentedControlCell.swift in Sources */,
 				F61702CD1F82AB1200126AE5 /* Group.swift in Sources */,
 				F6DE491E1F7C62F700E32FC4 /* AppDelegate.swift in Sources */,
+				F6FF1BDC1FACF998005CF988 /* PinnedMessageView.swift in Sources */,
 				F66E59111F999F0800039F48 /* TextViewExtension.swift in Sources */,
 				F6DE49261F7C62F700E32FC4 /* GroupChat1.xcdatamodeld in Sources */,
 				F61702D01F82E24500126AE5 /* GroupCell.swift in Sources */,
 				F6A8AD6B1F8C543700721B8C /* UserProfileMainCell.swift in Sources */,
 				F61702C91F82A5AB00126AE5 /* CustomTabBarController.swift in Sources */,
 				F6DE49461F7C903500E32FC4 /* NewGroupController.swift in Sources */,
+				F654462F1FA8F39900C5AE02 /* RandomAlphanumericKey.swift in Sources */,
 				F686E6E51F8491DA00515AE8 /* JoinNewGroupControllerHandlers.swift in Sources */,
 				F6DE49441F7C699E00E32FC4 /* User.swift in Sources */,
 				F6DE49341F7C633300E32FC4 /* HomePageController.swift in Sources */,
@@ -368,6 +532,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F6C1ECFC1FA8D0FA00DFBD0C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F6C1ECF51FA8D0FA00DFBD0C /* OneSignalNotificationServiceExtension */;
+			targetProxy = F6C1ECFB1FA8D0FA00DFBD0C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F6DE49211F7C62F700E32FC4 /* Main.storyboard */ = {
@@ -389,6 +561,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		F6C1ECFE1FA8D0FA00DFBD0C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F603F1BE384C63AB3A8AD94E /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9JW9M43QB8;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ConnorVanOoyen.GroupChat2.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F6C1ECFF1FA8D0FA00DFBD0C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 25323C792474C839ACF1F252 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9JW9M43QB8;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ConnorVanOoyen.GroupChat2.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		F6DE492D1F7C62F700E32FC4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -496,11 +706,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3AA846803945F963B907DBF1 /* Pods-GroupChat1.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = A62BDUX2VJ;
+				CODE_SIGN_ENTITLEMENTS = GroupChat1/GroupChat1.entitlements;
+				DEVELOPMENT_TEAM = 9JW9M43QB8;
 				INFOPLIST_FILE = GroupChat1/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ConnorVanOoyen.GroupChat1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ConnorVanOoyen.GroupChat2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -511,11 +724,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 87F2FE09341B075B515B79B6 /* Pods-GroupChat1.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = A62BDUX2VJ;
+				CODE_SIGN_ENTITLEMENTS = GroupChat1/GroupChat1.entitlements;
+				DEVELOPMENT_TEAM = 9JW9M43QB8;
 				INFOPLIST_FILE = GroupChat1/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ConnorVanOoyen.GroupChat1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ConnorVanOoyen.GroupChat2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -525,6 +741,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F6C1ED001FA8D0FA00DFBD0C /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6C1ECFE1FA8D0FA00DFBD0C /* Debug */,
+				F6C1ECFF1FA8D0FA00DFBD0C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F6DE49151F7C62F600E32FC4 /* Build configuration list for PBXProject "GroupChat1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

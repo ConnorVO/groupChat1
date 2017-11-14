@@ -9,12 +9,15 @@
 import UIKit
 import CoreData
 import Firebase
+import UserNotifications
+import FirebaseInstanceID
+import FirebaseMessaging
+import OneSignal
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, FIRMessagingDelegate, OSPermissionObserver, OSSubscriptionObserver {
 
     var window: UIWindow?
-
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -32,7 +35,171 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //window?.rootViewController = UINavigationController(rootViewController: HomePageController())
         window?.rootViewController = CustomTabBarController()
         
+        //FCM stuff
+        if #available(iOS 10.0, *) {
+            // For iOS 10 display notification (sent via APNS)
+            UNUserNotificationCenter.current().delegate = self
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: {_, _ in })
+            // For iOS 10 data message (sent via FCM
+            FIRMessaging.messaging().remoteMessageDelegate = self
+        } else {
+            let settings: UIUserNotificationSettings =
+                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
+        
+        application.registerForRemoteNotifications()
+        
+       // let onesignalInitSettings = [kOSSettingsKeyAutoPrompt: false]
+        
+        // Replace 'YOUR_APP_ID' with your OneSignal App ID.
+       /* OneSignal.initWithLaunchOptions(launchOptions,
+                                        appId: "1d31cb01-43a7-4a83-9e1c-46026b130642",
+                                        handleNotificationAction: nil,
+                                        settings: onesignalInitSettings)
+        
+        OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification;*/
+        
+        // Recommend moving the below line to prompt for push after informing the user about
+        //   how your app will use them.
+        OneSignal.promptForPushNotifications(userResponse: { accepted in
+            print("User accepted notifications: \(accepted)")
+        })
+        
+        // Sync hashed email if you have a login system or collect it.
+        //   Will be used to reach the user at the most optimal time of day.
+        // OneSignal.syncHashedEmail(userEmail)
+        
+        oneSignalStuffThatICopied(withLaunchOptions: launchOptions)
+        
         return true
+    }
+    
+    func oneSignalStuffThatICopied(withLaunchOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) {
+        
+        //OneSignal.setLogLevel(.LL_VERBOSE, visualLevel: .LL_NONE)
+        let notificationReceivedBlock: OSHandleNotificationReceivedBlock = { notification in
+            
+            print("Received Notification: \(notification!.payload.notificationID)")
+            print("launchURL = \(String(describing: notification?.payload.launchURL))")
+            print("content_available = \(String(describing: notification?.payload.contentAvailable))")
+        }
+        
+        let notificationOpenedBlock: OSHandleNotificationActionBlock = { result in
+            // This block gets called when the user reacts to a notification received
+            let payload: OSNotificationPayload? = result?.notification.payload
+            
+            print("Message = \(payload!.body)")
+            print("badge number = \(String(describing: payload?.badge))")
+            print("notification sound = \(String(describing: payload?.sound))")
+            
+            if let additionalData = result!.notification.payload!.additionalData {
+                print("additionalData = \(additionalData)")
+                
+                // DEEP LINK and open url in RedViewController
+                // Send notification with Additional Data > example key: "OpenURL" example value: "https://google.com"
+                /*let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                let instantiateRedViewController : RedViewController = mainStoryboard.instantiateViewController(withIdentifier: "RedViewControllerID") as! RedViewController
+                instantiateRedViewController.receivedURL = additionalData["OpenURL"] as! String!
+                self.window = UIWindow(frame: UIScreen.main.bounds)
+                self.window?.rootViewController = instantiateRedViewController
+                self.window?.makeKeyAndVisible()*/
+                
+                
+                if let actionSelected = payload?.actionButtons {
+                    print("actionSelected = \(actionSelected)")
+                }
+                
+                // DEEP LINK from action buttons
+                if let actionID = result?.action.actionID {
+                    
+                    // For presenting a ViewController from push notification action button
+                    /*let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                    let instantiateRedViewController : UIViewController = mainStoryboard.instantiateViewController(withIdentifier: "RedViewControllerID") as UIViewController
+                    let instantiatedGreenViewController: UIViewController = mainStoryboard.instantiateViewController(withIdentifier: "GreenViewControllerID") as UIViewController
+                    self.window = UIWindow(frame: UIScreen.main.bounds)*/
+                    
+                    print("actionID = \(actionID)")
+                    
+                    /*if actionID == "id2" {
+                        print("do something when button 2 is pressed")
+                        self.window?.rootViewController = instantiateRedViewController
+                        self.window?.makeKeyAndVisible()
+                        
+                        
+                    } else if actionID == "id1" {
+                        print("do something when button 1 is pressed")
+                        self.window?.rootViewController = instantiatedGreenViewController
+                        self.window?.makeKeyAndVisible()
+                        
+                    }*/
+                }
+            }
+        }
+        
+        let onesignalInitSettings = [kOSSettingsKeyAutoPrompt: false, kOSSettingsKeyInAppLaunchURL: true, ]
+        
+        OneSignal.initWithLaunchOptions(launchOptions, appId: "1d31cb01-43a7-4a83-9e1c-46026b130642", handleNotificationReceived: notificationReceivedBlock, handleNotificationAction: notificationOpenedBlock, settings: onesignalInitSettings)
+        
+        OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification
+        
+        // Add your AppDelegate as an obsserver
+        OneSignal.add(self as OSPermissionObserver)
+        
+        OneSignal.add(self as OSSubscriptionObserver)
+    }
+    
+    // Add this new method
+    func onOSPermissionChanged(_ stateChanges: OSPermissionStateChanges!) {
+        
+        // Example of detecting answering the permission prompt
+        if stateChanges.from.status == OSNotificationPermission.notDetermined {
+            if stateChanges.to.status == OSNotificationPermission.authorized {
+                print("Thanks for accepting notifications!")
+            } else if stateChanges.to.status == OSNotificationPermission.denied {
+                print("Notifications not accepted. You can turn them on later under your iOS settings.")
+            }
+        }
+        // prints out all properties
+        print("PermissionStateChanges: \n\(stateChanges)")
+    }
+    
+    // Output:
+    /*
+     Thanks for accepting notifications!
+     PermissionStateChanges:
+     Optional(<OSSubscriptionStateChanges:
+     from: <OSPermissionState: hasPrompted: 0, status: NotDetermined>,
+     to:   <OSPermissionState: hasPrompted: 1, status: Authorized>
+     >
+     */
+    
+    // TODO: update docs to change method name
+    // Add this new method
+    func onOSSubscriptionChanged(_ stateChanges: OSSubscriptionStateChanges!) {
+        if !stateChanges.from.subscribed && stateChanges.to.subscribed {
+            print("Subscribed for OneSignal push notifications!")
+        }
+        print("SubscriptionStateChange: \n\(stateChanges)")
+    }
+    
+    // Output:
+    
+    /*
+     Subscribed for OneSignal push notifications!
+     PermissionStateChanges:
+     Optional(<OSSubscriptionStateChanges:
+     from: <OSSubscriptionState: userId: (null), pushToken: 0000000000000000000000000000000000000000000000000000000000000000 userSubscriptionSetting: 1, subscribed: 0>,
+     to:   <OSSubscriptionState: userId: 11111111-222-333-444-555555555555, pushToken: 0000000000000000000000000000000000000000000000000000000000000000, userSubscriptionSetting: 1, subscribed: 1>
+     >
+     */
+    
+    // The callback to handle data message received via FCM for devices running iOS 10 or above.
+    func applicationReceivedRemoteMessage(_ remoteMessage: FIRMessagingRemoteMessage) {
+        print(remoteMessage.appData)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -43,6 +210,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        guard let currentUserUid = FIRAuth.auth()?.currentUser?.uid else {
+            return
+        }
+        
+        let timestamp = Int(NSDate().timeIntervalSince1970)
+        
+        let userRef = FIRDatabase.database().reference().child("users").child(currentUserUid)
+        userRef.updateChildValues(["timestampOfLastVisit" : timestamp])
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {

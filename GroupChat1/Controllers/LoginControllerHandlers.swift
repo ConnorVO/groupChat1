@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import OneSignal
 
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -28,12 +29,12 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
          FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, error) in
          
              if error != nil {
-                print("Login Error: ", error as Any)
-             }
-         
-             self.HomePageController?.fetchUserandSetupNavBarTitle()
-             self.dismiss(animated: true, completion: nil)
-         
+                print(error as Any)
+                self.handleError(withTitle: "Please Try Again", andMessage: "Email or password is incorrect")
+             } else {
+                self.homePageController?.fetchUserandSetupNavBarTitle()
+                self.dismiss(animated: true, completion: nil)
+            }
          })
     }
     
@@ -46,19 +47,35 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         
         let allowedCharacters = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_")
         if (username.rangeOfCharacter(from: allowedCharacters.inverted) != nil || username == "") {
-            print("invalid")
+            handleError(withTitle: "Please Try Again", andMessage: "Invalid username. Please usse numbers, letters, and/or underscore")
             return
         }
         
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user: FIRUser?, error) in
-             if error != nil {
-                print(error as Any)
+            if error != nil {
+                var message = String()
+                if let errCode = FIRAuthErrorCode(rawValue: error!._code) {
+                    switch errCode {
+                    case .errorCodeInvalidEmail:
+                        message = "Email is invalid."
+                    case .errorCodeEmailAlreadyInUse:
+                        message = "Email already in use."
+                    case .errorCodeWeakPassword:
+                        message = "Password must contain at least 6 characters"
+                    default:
+                        message = "There was an error trying to register you. Please try again"
+                    }
+                }
+                self.handleError(withTitle: "Please Try Again", andMessage: message)
              }
          
              guard let uid = user?.uid else {
                 print("Could not set user uid")
                 return
              }
+            
+            let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+            let oneSignalUserID = status.subscriptionStatus.userId
             
              //generate unique name for each image
              let imageName = NSUUID().uuidString
@@ -76,13 +93,19 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                      }
                     
                     if let profileImageURL = metaData?.downloadURL()?.absoluteString {
-                        let values = ["username": username, "email": email, "profileImageURL": profileImageURL, "searchUsername": username.lowercased()]
+                        let values = ["username": username, "email": email, "profileImageURL": profileImageURL, "oneSignalId": oneSignalUserID]
                         self.checkIfUsernameisAvailable(uid: uid, values: values as [String:AnyObject])
                     }
          
                  })
             }
          })
+    }
+    
+    private func handleError(withTitle title: String, andMessage message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func checkIfUsernameisAvailable(uid: String, values: [String: AnyObject]) {
@@ -95,7 +118,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         checkForExistingUsernameRef.observeSingleEvent(of: .value, with: { (snapshot) in
             
             if snapshot.exists() {
-                print("Username already taken")
+                self.handleError(withTitle: "Username Not Available", andMessage: "Please choose a different username")
             } else {
                 self.registerUserIntoDatabase(withUID: uid, values: values)
                 usernameRef.updateChildValues([lowercasedUsername: lowercasedUsername])
@@ -118,7 +141,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
              user.email = values["email"] as? String
              user.name = values["username"] as? String
              user.profileImageUrl = values["profileImageURL"] as? String
-             self.HomePageController?.setupNavBarWithUser(user: user)
+             self.homePageController?.setupNavBarWithUser(user: user)
             
              self.dismiss(animated: true, completion: nil)
          })
@@ -161,6 +184,12 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         
         //change input container height
         inputsContainerViewHeightAnchor?.constant = loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 100 : 150
+        
+        if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
+            usernameTextField.isHidden = true
+        } else {
+            usernameTextField.isHidden = false
+        }
         
         //remove/add name field
         usernameTextFieldHeightAnchor?.isActive = false

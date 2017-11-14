@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class NewGroupController: UIViewController, UITextViewDelegate {
+class NewGroupController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
     
     var keyboardHeight: CGFloat?
     
@@ -102,6 +102,7 @@ class NewGroupController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         groupDescriptionTextView.delegate = self
+        groupNameTextField.delegate = self
         
         view.backgroundColor = UIColor.green.main
         
@@ -190,6 +191,34 @@ class NewGroupController: UIViewController, UITextViewDelegate {
         createNewGroupButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         createNewGroupButton.widthAnchor.constraint(equalTo: tagsInputViewContainer.widthAnchor).isActive = true
         
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if(text == "\n") {
+            textView.resignFirstResponder()
+            return false
+        }
+        
+        let currentText = textView.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
+        
+        return updatedText.count <= 90
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if(string == "\n") {
+            textField.resignFirstResponder()
+            return false
+        }
+        
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+       
+        return updatedText.count <= 20
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {

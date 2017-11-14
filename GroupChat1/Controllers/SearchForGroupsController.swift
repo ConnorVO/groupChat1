@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import OneSignal
 
 class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate {
     
@@ -25,19 +26,34 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
         //fix spacing between top cell and nav bar
         collectionView?.contentInset = UIEdgeInsetsMake(5, 0, 0, 0)
         
-        navigationItem.title = "Search"
+        if #available(iOS 11.0, *) {
+            navigationItem.title = "Search"
+        } else {
+            navigationItem.title = ""
+        }
         
         setupSearchBar()
     }
     
     let searchController = UISearchController(searchResultsController: nil)
+    lazy var searchBar:UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 275, height: 20))
     
     private func setupSearchBar() {
         
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search For Groups"
-        navigationItem.searchController = searchController
+        if #available(iOS 11.0, *) {
+            searchController.searchResultsUpdater = self
+            searchController.obscuresBackgroundDuringPresentation = false
+            //searchController.searchBar.placeholder = "Search For Groups"
+            navigationItem.searchController = searchController
+        } else {
+            searchBar.delegate = self
+            searchBar.placeholder = "Search For Groups"
+            searchBar.barStyle = UIBarStyle.blackTranslucent
+            let leftNavBarButton = UIBarButtonItem(customView:searchBar)
+            self.navigationItem.leftBarButtonItem = leftNavBarButton
+            let cancelSearchBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SearchForGroupsController.cancelBarButtonItemClicked))
+            self.navigationItem.setRightBarButton(cancelSearchBarButtonItem, animated: true)
+        }
 
         definesPresentationContext = true
     
@@ -46,13 +62,16 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
     func updateSearchResults(for searchController: UISearchController) {
         //TODO: Search updates
         filterContentForSearchText(searchController.searchBar.text!)
-        //print(searchController.searchBar.text!.lowercased())
     }
     
     var filteredGroups = [Group]()
     private func searchBarIsEmpty() -> Bool {
         // Returns true if the text is empty or nil
-        return searchController.searchBar.text?.isEmpty ?? true
+        if #available(iOS 11.0, *) {
+            return searchController.searchBar.text?.isEmpty ?? true
+        } else {
+            return searchBar.text?.isEmpty ?? true
+        }
     }
     
     private func filterContentForSearchText(_ searchText: String, scope: String = "All") {
@@ -64,7 +83,33 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
     }
     
     private func isFiltering() -> Bool {
-        return searchController.isActive && !searchBarIsEmpty()
+        if #available(iOS 11.0, *) {
+            return searchController.isActive && !searchBarIsEmpty()
+        } else {
+            return searchBarisActive && !searchBarIsEmpty()
+        }
+    }
+    
+    var searchBarisActive = false
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBarisActive = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBarisActive = false
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterContentForSearchText(searchBar.text!)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        // closes the keyboard
+        searchBar.resignFirstResponder()
+    }
+    
+    @objc func cancelBarButtonItemClicked() {
+        self.searchBarCancelButtonClicked(self.searchBar)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -111,6 +156,7 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
             }
             
         }, withCancel: nil)
+
     }
     
     private func attemptReloadOfCollection() {
@@ -172,7 +218,7 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
         }
         
         cell.onJoinButtonTapped = {
-            self.joinButtonTappedHandler(indexPath: indexPath)
+            self.joinButtonTappedHandler(indexPath: indexPath, cell: cell)
         }
         
         checkIfUserIsInGroup(cell: cell, indexPath: indexPath)
@@ -184,6 +230,8 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
     private func checkIfUserIsInGroup(cell: GroupCell, indexPath: IndexPath) {
         
         joinedGroups.removeAll()
+        cell.joinButton.setTitleColor(UIColor.red, for: .normal)
+        cell.joinButton.setTitle("\u{2713}", for: .normal)
         
         guard let currentUserId = FIRAuth.auth()?.currentUser?.uid else {
             return
@@ -202,16 +250,19 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
             
             if self.joinedGroups.contains(groupId) {
                 cell.joinButton.setTitleColor(UIColor.green.main, for: .normal)
-                cell.joinButton.setTitle("joined", for: .normal)
+                cell.joinButton.setTitle("\u{2713}", for: .normal)
             } else {
                 cell.joinButton.setTitleColor(UIColor.red, for: .normal)
-                cell.joinButton.setTitle("join", for: .normal)
+                cell.joinButton.setTitle("+", for: .normal)
             }
             
         })
     }
     
-    private func joinButtonTappedHandler(indexPath: IndexPath) {
+    var homePageController: HomePageController?
+    var userProfileController: UserProfileController?
+    
+    private func joinButtonTappedHandler(indexPath: IndexPath, cell: GroupCell) {
         
         guard let groupId = groups[indexPath.row].groupId else {
             return
@@ -221,13 +272,37 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
             return
         }
         
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        guard let oneSignalUserID = status.subscriptionStatus.userId else {
+            return
+        }
+        
         //probably not safest way to do this?
         if joinedGroups.contains(groupId) {
             //remove user from group and group from user
+            FIRDatabase.database().reference().child("groups").child(groupId).child("memberCount").observeSingleEvent(of: .value, with: { (snapshot) in
+                if let numberOfMembers = snapshot.value as? Int {
+                    FIRDatabase.database().reference().child("groups").child(groupId).updateChildValues(["memberCount" : numberOfMembers - 1])
+                }
+            }, withCancel: nil)
+            
             FIRDatabase.database().reference().child("groups").child(groupId).child("groupMembers").child(currentUserId).removeValue()
             FIRDatabase.database().reference().child("users").child(currentUserId).child("groups").child(groupId).removeValue()
+            
+            FIRDatabase.database().reference().child("groups").child(groupId).child("groupMemberOneSignalIds").child(oneSignalUserID).removeValue()
+            
             joinedGroups.remove(at: joinedGroups.index(of: groupId)!)
+            
+            cell.joinButton.setTitle("+", for: .normal)
+            cell.joinButton.setTitleColor(UIColor.red, for: .normal)
+            
         } else {
+            
+            FIRDatabase.database().reference().child("groups").child(groupId).child("memberCount").observeSingleEvent(of: .value, with: { (snapshot) in
+                if let numberOfMembers = snapshot.value as? Int {
+                    FIRDatabase.database().reference().child("groups").child(groupId).updateChildValues(["memberCount" : numberOfMembers + 1])
+                }
+            }, withCancel: nil)
             
             let ref = FIRDatabase.database().reference().child("groups").child(groupId).child("groupMembers")
             
@@ -242,9 +317,31 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
             
             let userRef = FIRDatabase.database().reference().child("users").child(currentUserId).child("groups")
             userRef.updateChildValues([groupId: true])
+            
+            let oneSignalGroupRef = FIRDatabase.database().reference().child("groups").child(groupId).child("groupMemberOneSignalIds")
+            oneSignalGroupRef.updateChildValues([oneSignalUserID: true])
+        
+            createKeyForOneSignalTagDictionary(withGroupId: groupId)
+            
+            cell.joinButton.setTitle("\u{2713}", for: .normal)
+            cell.joinButton.setTitleColor(UIColor.green.main, for: .normal)
         }
         
-        observeGroups()
+        //observeGroups()
+    }
+    
+    private func createKeyForOneSignalTagDictionary(withGroupId groupId: String) {
+        let randomKey = RandomAlphanumericKey.randomAlphanumericString(length: 8)
+        
+        setTagForOneSignalTagDictionary(withKey: randomKey, withValue: groupId)
+    }
+    
+    private func setTagForOneSignalTagDictionary(withKey key: String, withValue value: String) {
+       
+        OneSignal.sendTag(key, value: value, onSuccess: { (tags) in
+        }) { (err) in
+            print(err as Any)
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -263,17 +360,7 @@ class SearchForGroupsController: UICollectionViewController, UITextFieldDelegate
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: UIScreen.main.bounds.width, height: 80)
-        //Below is used for Apple recommended keyboard
-        //return CGSize(width: view.frame.width, height: height)
+        return CGSize(width: UIScreen.main.bounds.width, height: 100)
     }
     
-    private func estimateFrameForText(text: String) -> CGRect {
-        //width is similar to bubble view width and height is arbitrarilly large
-        let size = CGSize(width: 200, height: 1000)
-        //idk why you have to set options like this
-        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        
-        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
-    }
 }

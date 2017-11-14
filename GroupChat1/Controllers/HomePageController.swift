@@ -8,8 +8,9 @@
 
 import UIKit
 import Firebase
+import OneSignal
 
-class HomePageController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class HomePageController: UICollectionViewController, UITextFieldDelegate, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, OSPermissionObserver, OSSubscriptionObserver{
     
     let cellId = "cellId"
     
@@ -26,6 +27,12 @@ class HomePageController: UICollectionViewController, UITextFieldDelegate, UICol
         
         //fix spacing between top cell and nav bar
         collectionView?.contentInset = UIEdgeInsetsMake(5, 0, 0, 0)
+        
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
+            OneSignal.sendTag("uid", value: uid)
+        }
+        
+        oneSignalFromViewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,7 +56,6 @@ class HomePageController: UICollectionViewController, UITextFieldDelegate, UICol
     
     func fetchUserandSetupNavBarTitle() {
         guard let uid = FIRAuth.auth()?.currentUser?.uid else {
-            print("Error getting uid from db")
             return
         }
         
@@ -115,6 +121,7 @@ class HomePageController: UICollectionViewController, UITextFieldDelegate, UICol
     }
     
     @objc func handleNewGroup() {
+       // sendNotification()
         let newGroupController = NewGroupController()
         navigationController?.pushViewController(newGroupController, animated: true)
     }
@@ -129,7 +136,7 @@ class HomePageController: UICollectionViewController, UITextFieldDelegate, UICol
         }
         
         let loginController = LoginController()
-        loginController.HomePageController = self //makes HomePageController not nil when calling self.HomePageController?.fetchUserAndSetupNavBarTitle from LoginController + Handlers
+        loginController.homePageController = self //makes HomePageController not nil when calling self.HomePageController?.fetchUserAndSetupNavBarTitle from LoginController + Handlers
         
         present(loginController, animated: true, completion: nil)
     }
@@ -152,6 +159,9 @@ class HomePageController: UICollectionViewController, UITextFieldDelegate, UICol
             
         }, withCancel: nil)
         
+        //if there is only cell and I delete it (i.e. leave the group), then the above ref
+        //doesn't get called so the data doesnt reload so I have to do it here
+        self.collectionView?.reloadData()
     }
     
     var groups = [Group]()
@@ -216,7 +226,7 @@ class HomePageController: UICollectionViewController, UITextFieldDelegate, UICol
         let group = groups[indexPath.row]
         cell.titleLabel.text = group.groupName
         cell.descriptionLabel.text = group.groupDescription
-        cell.joinButton.setTitle("joined", for: .normal)
+        cell.joinButton.setTitle("\u{2713}", for: .normal)
         cell.joinButton.setTitleColor(UIColor.green.main, for: .normal)
         
         cell.onJoinButtonTapped = {
@@ -239,9 +249,21 @@ class HomePageController: UICollectionViewController, UITextFieldDelegate, UICol
             return
         }
         
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        guard let oneSignalUserID = status.subscriptionStatus.userId else {
+            return
+        }
+        
         //remove user from group and group from user
+        FIRDatabase.database().reference().child("groups").child(groupId).child("memberCount").observeSingleEvent(of: .value, with: { (snapshot) in
+            if let numberOfMembers = snapshot.value as? Int {
+                FIRDatabase.database().reference().child("groups").child(groupId).updateChildValues(["memberCount" : numberOfMembers - 1])
+            }
+        }, withCancel: nil)
         FIRDatabase.database().reference().child("groups").child(groupId).child("groupMembers").child(currentUserId).removeValue()
         FIRDatabase.database().reference().child("users").child(currentUserId).child("groups").child(groupId).removeValue()
+    
+        FIRDatabase.database().reference().child("groups").child(groupId).child("groupMemberOneSignalIds").child(oneSignalUserID).removeValue()
         
         observeUserGroups()
     }
@@ -261,9 +283,131 @@ class HomePageController: UICollectionViewController, UITextFieldDelegate, UICol
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: UIScreen.main.bounds.width, height: 80)
+        return CGSize(width: UIScreen.main.bounds.width, height: 100)
         //Below is used for Apple recommended keyboard
         //return CGSize(width: view.frame.width, height: height)
+    }
+    
+    //ONESIGNAL STUFF
+    private func oneSignalFromViewDidLoad() {
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        let isSubscribed = status.subscriptionStatus.subscribed
+        print(status)
+        print(isSubscribed)
+        
+        /*if isSubscribed == true {
+            allowNotificationsSwitch.isOn = true
+            allowNotificationsSwitch.isUserInteractionEnabled = true
+            registerForPushNotificationsButton.backgroundColor = UIColor.green
+            registerForPushNotificationsButton.isUserInteractionEnabled = false
+        }*/
+        OneSignal.add(self as OSPermissionObserver)
+        OneSignal.add(self as OSSubscriptionObserver)
+    }
+    
+    func displaySettingsNotification() {
+        let message = NSLocalizedString("Please turn on notifications by going to Settings > Notifications > Allow Notifications", comment: "Alert message when the user has denied access to the notifications")
+        let alertController = UIAlertController(title: "OneSignal Example", message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"), style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"), style: .`default`, handler: { action in
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
+            } else {
+                // Fallback on earlier versions
+            }
+        }))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func onOSPermissionChanged(_ stateChanges: OSPermissionStateChanges!) {
+        if stateChanges.from.status == OSNotificationPermission.notDetermined {
+            if stateChanges.to.status == OSNotificationPermission.authorized {
+                /*registerForPushNotificationsButton.backgroundColor = UIColor.green
+                registerForPushNotificationsButton.isUserInteractionEnabled = false
+                allowNotificationsSwitch.isUserInteractionEnabled = true*/
+            } else if stateChanges.to.status == OSNotificationPermission.denied {
+                displaySettingsNotification()
+            }
+        } else if stateChanges.to.status == OSNotificationPermission.denied { // DENIED = NOT SUBSCRIBED
+            /*registerForPushNotificationsButton.isUserInteractionEnabled = true
+            allowNotificationsSwitch.isUserInteractionEnabled = false*/
+        }
+    }
+    
+    func onOSSubscriptionChanged(_ stateChanges: OSSubscriptionStateChanges!) {
+        if stateChanges.from.subscribed && !stateChanges.to.subscribed { // NOT SUBSCRIBED != DENIED
+            /*allowNotificationsSwitch.isOn = false
+            setSubscriptionLabel.text = "Set Subscription OFF"
+            registerForPushNotificationsButton.backgroundColor = UIColor.red*/
+        } else if !stateChanges.from.subscribed && stateChanges.to.subscribed {
+            /*allowNotificationsSwitch.isOn = true
+            allowNotificationsSwitch.isUserInteractionEnabled = true
+            setSubscriptionLabel.text = "Set Subscription ON"
+            registerForPushNotificationsButton.backgroundColor = UIColor.green
+            registerForPushNotificationsButton.isUserInteractionEnabled = false*/
+        }
+    }
+    
+    /*func registerForPushNotifications() {
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        let hasPrompted = status.permissionStatus.hasPrompted
+        if hasPrompted == false {
+            // Call when you want to prompt the user to accept push notifications.
+            // Only call once and only if you set kOSSettingsKeyAutoPrompt in AppDelegate to false.
+            OneSignal.promptForPushNotifications(userResponse: { accepted in
+                if accepted == true {
+                    print("User accepted notifications: \(accepted)")
+                } else {
+                    print("User accepted notifications: \(accepted)")
+                }
+            })
+        } else {
+            displaySettingsNotification()
+        }
+    }
+    
+    func getIds() {
+        //getPermissionSubscriptionState
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        let hasPrompted = status.permissionStatus.hasPrompted
+        print("hasPrompted = \(hasPrompted)")
+        let userStatus = status.permissionStatus.status
+        print("userStatus = \(userStatus)")
+        let isSubscribed = status.subscriptionStatus.subscribed
+        print("isSubscribed = \(isSubscribed)")
+        let userSubscriptionSetting = status.subscriptionStatus.userSubscriptionSetting
+        print("userSubscriptionSetting = \(userSubscriptionSetting)")
+        let userID = status.subscriptionStatus.userId
+        print("userID = \(userID)")
+        let pushToken = status.subscriptionStatus.pushToken
+        print("pushToken = \(pushToken)")
+    }*/
+    
+    func sendNotification() {
+        // See the Create notification REST API POST call for a list of all possible options: https://documentation.onesignal.com/reference#create-notification
+        // NOTE: You can only use include_player_ids as a targeting parameter from your app. Other target options such as tags and included_segments require your OneSignal App REST API key which can only be used from your server.
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        let pushToken = status.subscriptionStatus.pushToken
+        let userId = status.subscriptionStatus.userId
+        
+        if pushToken != nil {
+            let message = "This is a notification's message or body"
+            let notificationContent = [
+                "include_player_ids": ["a1bf9ed9-0959-4c88-974b-5a829c1cdcc9"],
+                "contents": ["en": message], // Required unless "content_available": true or "template_id" is set
+                "headings": ["en": "Notification Title"],
+                "subtitle": ["en": "An English Subtitle"],
+                // If want to open a url with in-app browser
+                "url": "https://google.com",
+                // If you want to deep link and pass a URL to your webview, use "data" parameter and use the key in the AppDelegate's notificationOpenedBlock
+                //"data": ["OpenURL": "https://imgur.com"],
+                //"ios_attachments": ["id" : "https://cdn.pixabay.com/photo/2017/01/16/15/17/hot-air-balloons-1984308_1280.jpg"],
+                "ios_badgeType": "Increase",
+                "ios_badgeCount": 1
+                ] as [String : Any]
+            
+            OneSignal.postNotification(notificationContent)
+        }
     }
     
 }

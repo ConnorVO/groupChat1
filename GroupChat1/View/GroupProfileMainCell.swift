@@ -37,14 +37,14 @@ class GroupProfileMainCell: UICollectionViewCell {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.sizeToFit()
         btn.addTarget(self, action: #selector(handleGroupImageBtn), for: .touchUpInside)
-        btn.layer.cornerRadius = 42
+        btn.layer.cornerRadius = 39
         return btn
     }()
     
     let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Sample text for now"
-        label.font = UIFont.systemFont(ofSize: 24)
+        label.font = UIFont.systemFont(ofSize: 22)
         label.backgroundColor = UIColor.clear
         label.textColor = UIColor.white
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -73,9 +73,9 @@ class GroupProfileMainCell: UICollectionViewCell {
         
         cellView.addSubview(groupImageView)
         groupImageView.leftAnchor.constraint(equalTo: cellView.leftAnchor, constant: 8).isActive = true
-        groupImageView.centerYAnchor.constraint(equalTo: cellView.centerYAnchor).isActive = true
-        groupImageView.widthAnchor.constraint(equalToConstant: 84).isActive = true
-        groupImageView.heightAnchor.constraint(equalToConstant: 84).isActive = true
+        groupImageView.centerYAnchor.constraint(equalTo: cellView.centerYAnchor, constant: 5).isActive = true
+        groupImageView.widthAnchor.constraint(equalToConstant: 78).isActive = true
+        groupImageView.heightAnchor.constraint(equalToConstant: 78).isActive = true
         
         cellView.addSubview(groupImageViewBtn)
         groupImageViewBtn.leftAnchor.constraint(equalTo: groupImageView.leftAnchor).isActive = true
@@ -85,12 +85,12 @@ class GroupProfileMainCell: UICollectionViewCell {
         
         cellView.addSubview(titleLabel)
         titleLabel.leftAnchor.constraint(equalTo: groupImageView.rightAnchor, constant: 8).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: groupImageView.topAnchor).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: groupImageView.topAnchor, constant: -5).isActive = true
         
         cellView.addSubview(groupDescriptionTextView)
         groupDescriptionTextView.leftAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -3).isActive = true
         groupDescriptionTextView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
-        groupDescriptionTextView.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        groupDescriptionTextView.widthAnchor.constraint(equalToConstant: 270).isActive = true
         groupDescriptionTextView.heightAnchor.constraint(equalToConstant: 75).isActive = true
         
     }

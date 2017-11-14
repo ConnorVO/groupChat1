@@ -14,6 +14,8 @@ class Message: NSObject {
     var timestamp: NSNumber?
     var text: String?
     var groupId: String?
+    var messageId: String?
+    var isStarred: Bool?
     
     var imageURL: String?
     var imageHeight: NSNumber?
@@ -30,6 +32,7 @@ class Message: NSObject {
         timestamp = dictionary["timestamp"] as? NSNumber
         text = dictionary["text"] as? String
         groupId = dictionary["groupId"] as? String
+        isStarred = dictionary["isStarred"] as? Bool
         
         imageURL = dictionary["imageURL"] as? String
         imageHeight = dictionary["imageHeight"] as? NSNumber

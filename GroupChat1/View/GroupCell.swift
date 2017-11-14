@@ -44,6 +44,7 @@ class GroupCell: UICollectionViewCell {
         label.font = UIFont.systemFont(ofSize: 16)
         label.backgroundColor = UIColor.clear
         label.textColor = UIColor.black
+        label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -53,17 +54,18 @@ class GroupCell: UICollectionViewCell {
         label.text = "Sample text for now"
         label.font = UIFont.systemFont(ofSize: 14)
         label.backgroundColor = UIColor.clear
-        label.textColor = UIColor.black
-        label.numberOfLines = 2
+        label.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.7)
+        label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
+        label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     lazy var joinButton: UIButton = {
         let btn = UIButton(type: .system)
-        //btn.setTitle("join", for: .normal)
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        btn.setTitle("\u{2713}", for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 24)
         btn.setTitleColor(UIColor.red, for: .normal)
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.sizeToFit()
@@ -94,15 +96,15 @@ class GroupCell: UICollectionViewCell {
         
         cellView.addSubview(titleLabel)
         titleLabel.leftAnchor.constraint(equalTo: groupImageView.rightAnchor, constant: 8).isActive = true
-        titleLabel.bottomAnchor.constraint(equalTo: cellView.centerYAnchor, constant: -10).isActive = true
-        titleLabel.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: cellView.topAnchor, constant: -10).isActive = true
+        //titleLabel.widthAnchor.constraint(equalToConstant: 150).isActive = true
         titleLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         cellView.addSubview(descriptionLabel)
         descriptionLabel.leftAnchor.constraint(equalTo: titleLabel.leftAnchor).isActive = true
-        descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8).isActive = true
         descriptionLabel.widthAnchor.constraint(equalToConstant: 250).isActive = true
-        descriptionLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        //descriptionLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         cellView.addSubview(joinButton)
         joinButton.rightAnchor.constraint(equalTo: cellView.rightAnchor, constant: -12).isActive = true

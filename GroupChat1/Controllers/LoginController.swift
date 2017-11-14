@@ -10,7 +10,7 @@ import UIKit
 
 class LoginController: UIViewController {
     
-    var HomePageController: HomePageController?
+    var homePageController: HomePageController?
     var keyboardHeight: CGFloat?
     
     //set-up middle input view
